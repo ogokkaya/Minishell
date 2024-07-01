@@ -6,7 +6,7 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:49:42 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/01 18:10:07 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/01 18:57:31 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,3 +85,4 @@ void	end_malloc(t_block *block)
 		free(block->allocate);
 	free(block);
 }
+

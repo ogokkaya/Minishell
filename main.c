@@ -6,7 +6,7 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/01 18:14:23 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/01 19:00:16 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	main(int ac, char **av, char **env)
 
 	// push TEST 1
 
+	t_env *tmp;
 	(void)av;
 	shell.env = NULL;
 	if (ac != 1)
@@ -26,16 +27,6 @@ int	main(int ac, char **av, char **env)
 			FALSE);
 	if (get_env(env, &shell) == FALSE)
 		return ((FALSE));
-	/* 	while (shell.env != NULL)
-		{
-			printf("%s =", shell.env->name);
-			printf("%s\n", shell.env->content);
-			shell.env = shell.env->next;
-		} */
-	while (shell.env != NULL)
-	{
-		free(shell.env);
-		shell.env = shell.env->next;
-	}
+	free_env(&shell);
 	return (TRUE);
 }
