@@ -6,7 +6,7 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:49:42 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/01 18:57:31 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/01 20:23:36 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,19 @@ t_block	*malloc_starter(void)
 }
 
 // Mallocs the memory and returns the pointer
-void	*my_malloc(t_block *block, size_t size)
+void	*my_malloc(t_block *block, void *address)
 {
-	void	*ptr;
 	t_block	*new_block;
 
 	if (block == NULL)
 		return (NULL);
-	ptr = malloc(size);
-	if (ptr != NULL)
+	new_block = ft_lstnew_memory(address);
+	if (new_block != NULL)
 	{
-		new_block = (t_block *)malloc(sizeof(t_block));
-		if (new_block != NULL)
-		{
-			new_block->allocate = ptr;
-			new_block->next = block->next;
-			block->next = new_block;
-			// DOĞRU DURUMDA ÇIKIŞ İÇİN
-			return (ptr);
-		}
+		ft_lstadd_back_memory(&block, new_block);
+		return (TRUE);
 	}
-	return (printf(MALLOC), ptr);
+	return (printf(MALLOC), NULL);
 }
 
 // Free's the malloced memory node
@@ -79,10 +71,5 @@ void	*free_malloc(t_block *block, void *delete_adress)
 // Free's all the malloced memory and the block
 void	end_malloc(t_block *block)
 {
-	if (block->next != NULL)
-		end_malloc(block->next);
-	if (block->allocate)
-		free(block->allocate);
-	free(block);
+	ft_lstclear_memory(&block, free);
 }
-
