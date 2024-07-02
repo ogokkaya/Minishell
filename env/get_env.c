@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:22:49 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/01 19:53:31 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:50:46 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	get_env(char **env, t_mshell *shell)
 
 	/* if (shell->env)
 		free(shell->env); */
-	// bu kısım export ve unstet için düşünülmüştü silinebilir
+	// bu kısım export ve unset için düşünülmüştü silinebilir
 	while (*env)
 	{
 		str = ft_split(*env, '=');
