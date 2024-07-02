@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error_handler.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 13:16:40 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/02 15:55:45 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/03 00:40:36 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

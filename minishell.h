@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/02 15:50:07 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/03 00:36:00 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,6 @@ void				ft_lstadd_back_env(t_env **lst, t_env *new);
 int					get_env(char **env, t_mshell *shell);
 void				free_env(t_mshell *shell);
 
-# define MALLOC "Error\nMemory"
+# define MALLOC "Error\nCould not allocate memory\n"
+#define ARG "Error\nThe program can only run without arguments\n"
 #endif
