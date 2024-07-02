@@ -5,7 +5,8 @@ MINISHELLA = minishell.h
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
-		env/env_utils.c env/get_env.c
+		env/env_utils.c env/get_env.c \
+		error_handling/error_handler.c
 		
 OBJS = $(CFILES:.c=.o)
 
@@ -17,18 +18,21 @@ $(NAME): $(OBJS)
 	@make -C $(LIBFT)
 	@echo "🚧 $(BOLD_YELLOW)Make: Starting the MINISHELL compilation..."
 	@$(CC) $(CFLAGS) $(OBJS) $(LIBFTA) $(MINISHELL) -o $(NAME)
-	@echo "📟 $(BOLD_GREEN)Minishell ready$(NO_COLOR)!"
+	@clear
+	@echo "📟 $(BOLD_GREEN)Minishell compiled succesfully$(NO_COLOR)!"
 
 all: $(NAME)
 
 clean:
 	@make clean -C $(LIBFT)
 	@rm -rf $(OBJS)
+	@clear
 	@echo "🧼 $(BOLD_YELLOW)Minishell Clean: $(NO_COLOR)Removed object files"
 
 fclean: clean
 	@make fclean -C $(LIBFT)
 	@rm -f $(NAME)
+	@clear
 	@echo "🧼 $(BOLD_YELLOW)Minishell Clean: $(NO_COLOR)Removed all!"
 
 re: fclean all

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/01 20:22:19 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/02 13:57:49 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 # define MINISHELL_H
 
 # include "./libft/libft.h"
+
+//LEXER
+
 
 # define TRUE 0
 # define FALSE 1
@@ -40,13 +43,17 @@ typedef struct s_mshell
 
 // memory monitor
 void				*my_malloc(t_block *block, void *address);
-void				*free_malloc(t_block *block, void *delete_adress);
+void				free_malloc(t_block *block, void *delete_adress);
 void				ft_lstdelone_memory(t_block *lst, void (*del)(void *));
 void				end_malloc(t_block *block);
 t_block				*ft_lstnew_memory(void *content);
 void				ft_lstadd_back_memory(t_block **lst, t_block *new);
 void				ft_lstclear_memory(t_block **lst, void (*del)(void *));
 t_block				*malloc_starter(void);
+
+// error handling
+void				error_exit(char *error_message, t_mshell *shell, int free_flag);
+
 
 // env
 t_env				*ft_lstnew_env(t_mshell *shell, char *str, char *ptr);
