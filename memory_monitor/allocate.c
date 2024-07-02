@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   allocate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:49:42 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/02 13:29:26 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:56:12 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,13 @@ t_block	*malloc_starter(void)
 	t_block	*block;
 
 	block = ft_calloc(1, sizeof(t_block));
-	block = NULL;
 	if (!block)
 		error_exit(MALLOC, NULL, FALSE);
 	return (block);
 }
 
 // Mallocs the memory and returns the pointer
+// void türünden int tiplemesine dönücek fonk
 void	*my_malloc(t_block *block, void *address)
 {
 	t_block	*new_block;
@@ -42,6 +42,7 @@ void	*my_malloc(t_block *block, void *address)
 }
 
 // Free's the malloced memory node
+// bu denenicek
 void	free_malloc(t_block *block, void *delete_adress)
 {
 	t_block	*current_node;
@@ -69,7 +70,9 @@ void	free_malloc(t_block *block, void *delete_adress)
 }
 
 // Free's all the malloced memory and the block
-void	end_malloc(t_block *block)
+void	end_malloc(t_mshell *shell)
 {
-	ft_lstclear_memory(&block, free);
+	if (shell->env)
+		free_env(shell);
+	ft_lstclear_memory(&shell->block, free);
 }

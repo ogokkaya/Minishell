@@ -2,8 +2,8 @@ NAME = minishell
 LIBFT = libft
 LIBFTA = libft/libft.a
 MINISHELLA = minishell.h
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CC = cc -g
+#CFLAGS = -Wall -Wextra -Werror
 CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		env/env_utils.c env/get_env.c \
 		error_handling/error_handler.c

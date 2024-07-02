@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:46:58 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/02 12:54:21 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/02 15:05:26 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_block	*ft_lstnew_memory(void *content)
 {
 	t_block	*new;
 
-	new = malloc(sizeof(t_list));
+	new = malloc(sizeof(t_block));
 	if (!new)
 		return (0);
 	new->allocate = content;
