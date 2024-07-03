@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:49:42 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/03 00:48:33 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/04 00:06:57 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void	free_malloc(t_block *block, void *delete_adress)
 // Free's all the malloced memory and the block
 void	end_malloc(t_mshell *shell)
 {
+	// rl_clear_history bu kısıma da eklenebilir
 	if (shell->env)
 		free_env(shell);
 	ft_lstclear_memory(&shell->block, free);

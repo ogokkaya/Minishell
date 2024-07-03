@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_controls.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:10:33 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/03 20:16:53 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/03 22:13:25 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,5 @@ int line_verify(char *line)
         return (FALSE);
     if (standardizer(&line) == FALSE)
         return (FALSE);
-
-    printf("line: %s\n", line);
     return (TRUE);
 }

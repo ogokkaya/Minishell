@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 18:18:55 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/03 23:19:51 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,13 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
+
+typedef struct s_lexer
+{
+	char *content;
+	struct s_lexer *next;
+}			t_lexer;
+
 typedef struct s_block
 {
 	void			*allocate;
@@ -51,13 +58,13 @@ typedef struct s_mshell
 {
 	char			*input;
 	struct s_block	*block;
+	struct s_lexer  *lexer;
 	struct s_env	*env;
 }					t_mshell;
 
 // input_control
 int			quoter(char *line);
 int			line_verify(char *line);
-
 
 
 // memory monitor
@@ -79,5 +86,11 @@ t_env				*ft_lstnew_env(char *str, char *ptr);
 void				ft_lstadd_back_env(t_env **lst, t_env *new);
 int					get_env(char **env, t_mshell *shell);
 void				free_env(t_mshell *shell);
+
+// lexer
+void 		lexer(t_mshell *shell);
+t_lexer		*ft_lstnew_lexer(t_mshell *shell, char *content);
+void	ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
+
 
 #endif
