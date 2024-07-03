@@ -6,14 +6,14 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 16:15:18 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/03 16:19:24 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <stdio.h>
 #include <./readline/history.h>
 #include <./readline/readline.h>
-#include <stdio.h>
 
 int	shell_start_init(char **env, t_mshell *shell)
 {
