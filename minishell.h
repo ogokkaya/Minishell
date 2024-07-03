@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 00:36:00 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/03 14:06:23 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,21 @@
 
 # include "./libft/libft.h"
 
-// LEXER
-
 # define TRUE 0
 # define FALSE 1
+
+// LEXER_DEFINES
+# define SPACE ' '
+# define PIPE '|'
+# define BRACKET_OPEN '('
+# define BRACKET_CLOSE ')'
+# define REDIRECT_OUT '>'
+# define REDIRECT_IN '<'
+# define SINGLE_QUOTE '\''
+# define DOUBLE_QUOTE '\"'
+
+// PRINT_DEFINES
+# define PROMT "\033[1;31mminishell$\033[0m"
 
 typedef struct s_env
 {
@@ -39,6 +50,9 @@ typedef struct s_mshell
 	struct s_block	*block;
 	struct s_env	*env;
 }					t_mshell;
+
+// lexer
+int					line_arg_count(char *line);
 
 // memory monitor
 void				*my_malloc(t_block *block, void *address);
