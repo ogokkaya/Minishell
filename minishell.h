@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 15:05:43 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/03 18:18:55 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,11 @@ typedef struct s_mshell
 	struct s_block	*block;
 	struct s_env	*env;
 }					t_mshell;
+
+// input_control
+int			quoter(char *line);
+int			line_verify(char *line);
+
 
 
 // memory monitor

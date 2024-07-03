@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 16:39:52 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/03 18:58:06 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,15 @@ void	read_line_cycle(t_mshell *shell)
 	}
 	if (shell->input && !ft_isspace(shell->input))
 	{
-		free(shell->input);
+		add_history(shell->input);
 		read_line_cycle(shell);
 	}
-	// girdi kontrolü bu kısıma eklenecek
+	if (shell->input && line_verify(shell->input) == FALSE)
+	{
+		add_history(shell->input);
+		printf("syntax error\n");
+		read_line_cycle(shell);
+	}
 	//free(shell->input); leak gelmemesi için tekrarddda
 	add_history(shell->input);
 }
