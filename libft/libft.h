@@ -6,7 +6,7 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 01:18:28 by ogokkaya          #+#    #+#             */
-/*   Updated: 2023/12/22 00:38:01 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:18:40 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);
 int					ft_isalnum(int c);
+int					ft_isspace(char *str);
 int					ft_isascii(int c);
 int					ft_isprint(int c);
 int					ft_toupper(int c);

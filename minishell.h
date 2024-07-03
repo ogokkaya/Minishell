@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 14:06:23 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/03 15:05:43 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@
 
 // PRINT_DEFINES
 # define PROMT "\033[1;31mminishell$\033[0m"
+//ERROR
+# define MALLOC "Error\nCould not allocate memory\n"
+#define ARG "Error\nThe program can only run without arguments\n"
 
 typedef struct s_env
 {
@@ -51,8 +54,6 @@ typedef struct s_mshell
 	struct s_env	*env;
 }					t_mshell;
 
-// lexer
-int					line_arg_count(char *line);
 
 // memory monitor
 void				*my_malloc(t_block *block, void *address);
@@ -74,6 +75,4 @@ void				ft_lstadd_back_env(t_env **lst, t_env *new);
 int					get_env(char **env, t_mshell *shell);
 void				free_env(t_mshell *shell);
 
-# define MALLOC "Error\nCould not allocate memory\n"
-#define ARG "Error\nThe program can only run without arguments\n"
 #endif

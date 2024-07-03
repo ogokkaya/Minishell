@@ -2,7 +2,7 @@ NAME = minishell
 LIBFT = libft
 LIBFTA = libft/libft.a
 MINISHELLA = minishell.h
-CC = cc -g
+CC = cc -g -lreadline
 #CFLAGS = -Wall -Wextra -Werror
 CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		env/env_utils.c env/get_env.c \
