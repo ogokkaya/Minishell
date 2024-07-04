@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_controls.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:10:33 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/03 22:13:25 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/04 13:20:15 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int normalize_line(char *line)
 
 static int standardizer(char *line)
 {
-    *line++;
+    line++;
     return (TRUE);
 }
 
@@ -46,7 +46,7 @@ int line_verify(char *line)
     i = 0;
     if (quoter(line) == FALSE)
         return (FALSE);
-    if (standardizer(&line) == FALSE)
+    if (standardizer(line) == FALSE)
         return (FALSE);
     return (TRUE);
 }
