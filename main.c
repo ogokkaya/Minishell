@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 18:58:06 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:59:00 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 int	shell_start_init(char **env, t_mshell *shell)
 {
 	shell->env = NULL;
+	shell->lexer = NULL;
 	shell->block = malloc_starter();
 	if (get_env(env, shell) == FALSE)
 		return (printf(MALLOC), FALSE);
@@ -44,7 +45,7 @@ void	read_line_cycle(t_mshell *shell)
 		printf("syntax error\n");
 		read_line_cycle(shell);
 	}
-	//free(shell->input); leak gelmemesi için tekrarddda
+	// free(shell->input); leak gelmemesi için tekrarddda
 	add_history(shell->input);
 }
 
@@ -53,6 +54,8 @@ int	loop_shell(t_mshell *shell)
 	while (1)
 	{
 		read_line_cycle(shell);
+		lexer(shell);
+		// expender(shell);
 	}
 }
 
