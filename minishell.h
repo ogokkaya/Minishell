@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 18:18:55 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/04 13:55:21 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ typedef struct s_mshell
 }					t_mshell;
 
 // input_control
-int			quoter(char *line);
 int			line_verify(char *line);
+int			ft_space(char c);
 
 
 
