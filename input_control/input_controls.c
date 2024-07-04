@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:10:33 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/04 14:10:20 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/04 16:16:47 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,35 @@ int quoter(char *line)
 static int redirection_check(char *line)
 {
     int redir_count = 0;
+    char last_redir = '\0';
+    int in_quotes = 0;
 
     while (*line)
     {
-        if (*line == REDIRECT_OUT || *line == REDIRECT_IN)
+        // Girdilerin tırnak içinde olup olmadığını kontrol eden if bloğu
+        if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
         {
+            if (in_quotes == 0)
+                in_quotes = 1;
+            else
+                in_quotes = 0;
+        }
+        
+        // Eğer tırnak içinde değilse ve girdi > veya < işaretlerinden biri ise devamında kullanımını kontrol eder
+        if (!in_quotes && *line == REDIRECT_OUT || *line == REDIRECT_IN)
+        {
+            if (last_redir == REDIRECT_OUT && *line == REDIRECT_IN
+                || last_redir == REDIRECT_IN && *line == REDIRECT_OUT)
+                return (ft_putendl_fd("WRONG REDIRECTION USAGE: Consecutive opposite redirections", 2), FALSE);
             redir_count++;
             if (redir_count >= 3)
-            {
-                return (ft_putendl_fd("WRONG REDIRECTION USAGE", 2), FALSE);
-            }
+                return (ft_putendl_fd("WRONG REDIRECTION USAGE: Too many consecutive redirections", 2), FALSE);
+            last_redir = *line;
         }
         else
         {
             redir_count = 0;
+            last_redir = '\0';
         }
         line++;
     }
@@ -65,10 +80,20 @@ static int pipe_check(char *line)
 {
     int pipe_count = 0;
     int in_command = 0;
+    int in_quotes = 0;
 
     while (*line)
     {
-        if (*line == PIPE)
+        // Girdilerin tırnak içinde olup olmadığını kontrol eden if bloğu
+        if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
+        {
+            if (in_quotes == 0)
+                in_quotes = 1;
+            else
+                in_quotes = 0;
+        }
+        // Eğer tırnak içinde değilse ve girdi | işareti ise devamında kullanımını kontrol eder
+        if (!in_quotes && *line == PIPE)
         {
             if (pipe_count > 0 && !in_command)
                 return (ft_putendl_fd("WRONG PIPE USAGE: Missing command between pipes", 2), FALSE);
@@ -96,6 +121,7 @@ static int pipe_check(char *line)
 static int standardizer(char *line)
 {
     int i;
+    int in_quote;
 
     i = ft_strlen(line);
         if (line[i] == SPACE)
@@ -119,14 +145,18 @@ static int standardizer(char *line)
 int line_verify(char *line)
 {
     int i;
-
+    
     i = 0;
+    // tırnak kontrolü
     if (quoter(line) == FALSE)
         return (FALSE);
+    // redirection kontrolü 
     if (redirection_check(line) == FALSE)
         return (FALSE);
+    // pipe kontrolü
     if (pipe_check(line) == FALSE)
         return (FALSE);
+    // 2. pipe kontrolü
     if (standardizer(line) == FALSE)
         return (FALSE);
     return (TRUE);

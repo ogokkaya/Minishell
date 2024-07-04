@@ -7,7 +7,7 @@ CC = cc -g -lreadline
 CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		env/env_utils.c env/get_env.c \
 		error_handling/error_handler.c input_control/input_controls.c \
-		input_control/input_controls_utils.c lexer/lexer.c lexer/lexer_utils.c
+		input_control/input_control_utils.c lexer/lexer.c lexer/lexer_utils.c
 
 		
 		
