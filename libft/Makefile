@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+         #
+#    By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 21:37:52 by ogokkaya          #+#    #+#              #
-#    Updated: 2024/07/03 15:19:13 by ogokkaya         ###   ########.fr        #
+#    Updated: 2024/07/04 20:14:04 by onurgokkaya      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC  =  ft_isalpha.c	\
 	    ft_strchr.c 	\
 	    ft_strrchr.c 	\
 	    ft_strncmp.c 	\
+		ft_strcmp.c     \
 	    ft_memchr.c 	\
 	    ft_memcmp.c 	\
 	    ft_strnstr.c 	\

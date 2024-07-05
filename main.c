@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/04 14:17:04 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/04 23:47:06 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	read_line_cycle(t_mshell *shell)
 	if (!shell->input)
 	{
 		end_malloc(shell);
-		rl_clear_history();
+		//rl_clear_history();
 		exit(1);
 	}
 	if (shell->input && !ft_isspace(shell->input))
@@ -39,12 +39,12 @@ void	read_line_cycle(t_mshell *shell)
 		add_history(shell->input);
 		read_line_cycle(shell);
 	}
-	if (shell->input && line_verify(shell->input) == FALSE)
+	/* if (shell->input && line_verify(shell->input) == FALSE)
 	{
 		add_history(shell->input);
 		printf("syntax error\n");
 		read_line_cycle(shell);
-	}
+	} */
 	// free(shell->input); leak gelmemesi için tekrarddda
 	add_history(shell->input);
 }
@@ -55,7 +55,7 @@ int	loop_shell(t_mshell *shell)
 	{
 		read_line_cycle(shell);
 		lexer(shell);
-		// expender(shell);
+		expender(shell);
 	}
 }
 

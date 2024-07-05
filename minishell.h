@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/04 14:11:11 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/04 21:15:13 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,18 @@
 # define DOUBLE_QUOTE '\"'
 
 // PRINT_DEFINES
-# define PROMT "\033[1;31mminishell$\033[0m"
+# define PROMT "minishell$"
 //ERROR
 # define MALLOC "Error\nCould not allocate memory\n"
 #define ARG "Error\nThe program can only run without arguments\n"
+
+typedef enum s_token_type
+{
+	TOKEN_PIPE = 1,
+	TOKEN_REDIRECT,
+	TOKEN_HEREDOC,
+	TOKEN_COMMAND
+}	t_token_type;
 
 typedef struct s_env
 {
@@ -45,6 +53,7 @@ typedef struct s_env
 typedef struct s_lexer
 {
 	char *content;
+	t_token_type type;
 	struct s_lexer *next;
 }			t_lexer;
 
@@ -89,8 +98,11 @@ void				free_env(t_mshell *shell);
 
 // lexer
 void 		lexer(t_mshell *shell);
-t_lexer		*ft_lstnew_lexer(t_mshell *shell, char *content);
+t_lexer	*ft_lstnew_lexer(t_mshell *shell ,char *content, t_token_type type);
 void	ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
+
+//expander
+void expender(t_mshell *shell);
 
 
 #endif

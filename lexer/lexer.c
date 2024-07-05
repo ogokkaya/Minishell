@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 13:53:37 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/04 13:59:57 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/05 14:21:11 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ static int	get_next_token_length(char *input)
 	int	i;
 
 	i = 0;
-	if (input[i] && (input[i] == '<' && input[i + 1] == '<') || (input[i] == '>'
-			&& input[i + 1] == '>'))
+	if ((input[i] == '<' && input[i + 1] == '<') || (input[i] == '>' && input[i + 1] == '>'))
 		return (2);
 	if (input[i] && (input[i] == '>' || input[i] == '<' || input[i] == '|'))
 		return (1);
@@ -48,11 +47,20 @@ static int	get_next_token_length(char *input)
 	return (i);
 }
 
+static t_token_type determine_token_type(char *token)
+{
+	if(ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0 || ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0)
+		return(TOKEN_REDIRECT);
+	if(ft_strcmp(token, "|") == 0)
+		return(TOKEN_PIPE);
+	return(TOKEN_COMMAND);
+}
+
 static void	parse_command_tokens(char *input, t_mshell *shell)
 {
 	int		len;
 	char	*content;
-	char	*complete_content;
+	t_token_type type;
 	char	*next_input_tmp;
 
 	len = 0;
@@ -61,11 +69,10 @@ static void	parse_command_tokens(char *input, t_mshell *shell)
 		len = get_next_token_length(input);
 		content = ft_substr(input, 0, len);
 		if (!content)
-			return (perror(content), end_malloc(shell), exit(1));
-		complete_content = ft_strtrim(content, " ");
-		free(content);
+			return (perror(content), free(input),end_malloc(shell), exit(1));
+		type = determine_token_type(content);
 		ft_lstadd_back_lexer(&shell->lexer, ft_lstnew_lexer(shell,
-				complete_content));
+				content, type));
 		next_input_tmp = ft_strtrim(input + len, " ");
 		if (!next_input_tmp)
 			return (perror("next_input_tmp"), free(input), end_malloc(shell),
