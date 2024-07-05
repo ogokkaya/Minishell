@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/05 14:15:46 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/05 14:24:00 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ void expand_tilde(t_mshell *shell, t_lexer *lexer)
     }
     else
         free(home);
-    printf("%s\n", lexer->content);
 }
 
 void expender(t_mshell *shell)
