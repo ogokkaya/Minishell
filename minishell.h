@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/04 21:15:13 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/07 17:22:42 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef enum s_token_type
 	TOKEN_COMMAND
 }	t_token_type;
 
+//ENV STRUCT
 typedef struct s_env
 {
 	char			*name;
@@ -49,26 +50,54 @@ typedef struct s_env
 	struct s_env	*next;
 }					t_env;
 
-
+//LEXER STRUCT
 typedef struct s_lexer
 {
-	char *content;
-	t_token_type type;
-	struct s_lexer *next;
+	char			*content;
+	t_token_type 	type;
+	struct s_lexer	*next;
 }			t_lexer;
 
+//MEMORY STRUCT
 typedef struct s_block
 {
 	void			*allocate;
 	struct s_block	*next;
 }					t_block;
 
+//ABSTRACT SYNTAX TREE
+typedef struct s_file
+{
+	char	*name;
+	int		double_op;
+	int		fd;
+}	t_file;
+
+typedef struct s_content
+{
+	char				*content;
+	t_token_type		type;
+}			t_content;
+
+typedef struct s_ast // echo test > test.txt | cat wc -l
+{
+	char		*command;
+	t_content	*content;
+	t_file		*input_file;
+	t_file		*output_file;
+	pid_t		p_id;
+	struct s_ast	*next;
+	struct s_ast	*prev;
+} t_ast;
+
+//MAIN STRUCT
 typedef struct s_mshell
 {
 	char			*input;
 	struct s_block	*block;
 	struct s_lexer  *lexer;
 	struct s_env	*env;
+	struct s_ast	*ast;
 }					t_mshell;
 
 // input_control
@@ -102,7 +131,13 @@ t_lexer	*ft_lstnew_lexer(t_mshell *shell ,char *content, t_token_type type);
 void	ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
 
 //expander
-void expender(t_mshell *shell);
+void expander(t_mshell *shell);
+
+//parser
+t_ast   *create_parser_node(t_mshell *shell, t_lexer *lexer);
+void	ft_listadd_back_ast(t_ast **lst, t_ast *new);
+int		pipe_count(t_mshell *shell);
+void	parser(t_mshell *shell);
 
 
 #endif

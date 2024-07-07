@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:10:33 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/04 16:16:47 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/07 16:27:24 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,10 @@ static int redirection_check(char *line)
         }
         
         // Eğer tırnak içinde değilse ve girdi > veya < işaretlerinden biri ise devamında kullanımını kontrol eder
-        if (!in_quotes && *line == REDIRECT_OUT || *line == REDIRECT_IN)
+        if (!in_quotes && (*line == REDIRECT_OUT || *line == REDIRECT_IN))
         {
-            if (last_redir == REDIRECT_OUT && *line == REDIRECT_IN
-                || last_redir == REDIRECT_IN && *line == REDIRECT_OUT)
+            if ((last_redir == REDIRECT_OUT && *line == REDIRECT_IN)
+                || (last_redir == REDIRECT_IN && *line == REDIRECT_OUT))
                 return (ft_putendl_fd("WRONG REDIRECTION USAGE: Consecutive opposite redirections", 2), FALSE);
             redir_count++;
             if (redir_count >= 3)
@@ -121,7 +121,6 @@ static int pipe_check(char *line)
 static int standardizer(char *line)
 {
     int i;
-    int in_quote;
 
     i = ft_strlen(line);
         if (line[i] == SPACE)

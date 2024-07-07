@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/05 14:24:00 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/07 14:03:08 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void expand_tilde(t_mshell *shell, t_lexer *lexer)
         free(home);
 }
 
-void expender(t_mshell *shell)
+void expander(t_mshell *shell)
 {
     //char *extended_input;
     char *temporary;
