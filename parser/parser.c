@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/07 17:39:57 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/08 22:06:00 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,24 @@
 
 #include <stdio.h>
 
-void parser(t_mshell *shell)
+
+
+
+
+void parser(t_lexer *lexer)
+{
+    unquote_the_output(lexer);
+    while(lexer != NULL)
+    {
+        printf("%s\n", lexer->content);
+        lexer = lexer->next;
+    }
+}
+
+
+
+
+/* void parser(t_mshell *shell)
 {
     t_lexer *ptr;
 
@@ -34,4 +51,4 @@ void parser(t_mshell *shell)
         shell->ast = shell->ast->next;
     }
     
-}
+} */

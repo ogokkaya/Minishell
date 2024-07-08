@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <stdio.h>
 
 char *find_env(t_mshell *shell, char *path)
 {
@@ -7,21 +8,14 @@ char *find_env(t_mshell *shell, char *path)
     search_env = shell->env;
     while(search_env != NULL)
     {
-        if(ft_strcmp(search_env->name, path) == 0)
+        // bu kısma bak 
+        if((ft_strncmp(search_env->name, path, ft_strlen(search_env->name)) == 0) && (ft_strncmp(search_env->name, path, ft_strlen(path)) == 0))
             return(ft_strdup(search_env->content));
         search_env = search_env->next;
     }
     return(ft_strdup(""));
     // bu kısım düşünülmeli
 }
-
-/* char *var_name(char *after_dollar, int index)
-{
-    char *var_name;
-
-    ft_subtsr()
-} */
-
 
 int *exit_status(void)
 {
@@ -52,6 +46,9 @@ int check_quotes(const char *before, const char *after)
     int double_qoute_before;
     int double_qoute_after;
 
+    // echo "'$USER'" koşulu gibi koşullarda direkt sonuc
+    if(before[0] == '\"' && after[ft_strlen(after) - 1] == '\"')
+        return(1);
     single_qoute_before = count_char(before, '\'');
     single_qoute_after = count_char(after, '\'');
     double_qoute_before = count_char(before, '\"');
@@ -60,16 +57,14 @@ int check_quotes(const char *before, const char *after)
     // cift tırnakta "$" koşul için
     if(!double_qoute_after && after[1] == '\"')
         return(0);
+    // sadece cift tırnak
+    else if(double_qoute_before && double_qoute_after && !single_qoute_after && !single_qoute_before)
+        return(1);
     //tek tırnak düzensiz kapanma koşulunda koydum input controlde kalırsa buna gerek yok
-    else if(!single_qoute_after && single_qoute_before)
+    else if((!single_qoute_after && single_qoute_before) || (!single_qoute_before && single_qoute_after))
         return(1);
     // hem tırnaksızda hem de tırnaksızdan sonra gelen tırnakda $USER"$USER"
     else if(!single_qoute_after && !single_qoute_before && !double_qoute_after && !double_qoute_before)
-        return(1);
-    /* else if(single_qoute_after && single_qoute_before && !double_qoute_after && !double_qoute_before)
-        return(0); */
-    // sadece cift tırnak
-    else if(double_qoute_before && double_qoute_after && !single_qoute_after && !single_qoute_before)
         return(1);
     return(0);
 }

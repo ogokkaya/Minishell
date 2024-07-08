@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_controls.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:10:33 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/07 16:27:24 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/08 20:21:30 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,9 +143,6 @@ static int standardizer(char *line)
 
 int line_verify(char *line)
 {
-    int i;
-    
-    i = 0;
     // tırnak kontrolü
     if (quoter(line) == FALSE)
         return (FALSE);

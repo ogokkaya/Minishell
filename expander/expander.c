@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/08 00:25:06 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/08 23:12:33 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar
         free(dollar_changed);
         if(!lexer->content)
             return(perror("dollar_changed"), FALSE);
-        printf("%s\n", lexer->content);
     }
     return(TRUE);
 }
@@ -61,7 +60,6 @@ static int expand_exit_status(t_lexer *lexer, char *before_dollar, char *after_d
     lexer->content = ft_strjoin(before_dollar, changed_input);
     if(!lexer->content)
         return(perror("lexer->content"), FALSE);
-    //printf("%s\n", lexer->content);
     return(TRUE);
 }
 
