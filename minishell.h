@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/09 14:05:45 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:20:36 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,7 @@ void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
 void		parser(t_mshell *shell);
 t_content	*ft_listnew_content(char *content, t_mshell *shell);
 void		ft_listadd_back_content(t_content **lst, t_content *new);
+void		unquote_the_output(t_lexer *lexer);
 
 
 #endif

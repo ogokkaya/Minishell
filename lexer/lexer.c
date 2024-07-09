@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 13:53:37 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/05 14:21:11 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/09 15:18:11 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ static int	get_next_token_length(char *input)
 static t_token_type determine_token_type(char *token)
 {
 	if(ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0 || ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0)
-		return(TOKEN_REDIRECT);
+		return(TOKEN_REDIR_IN);
 	if(ft_strcmp(token, "|") == 0)
 		return(TOKEN_PIPE);
-	return(TOKEN_COMMAND);
+	return(TOKEN_WORD);
 }
 
 static void	parse_command_tokens(char *input, t_mshell *shell)

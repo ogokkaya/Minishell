@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/08 23:15:14 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/09 15:16:33 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	loop_shell(t_mshell *shell)
 		lexer(shell);
 		expander(shell, shell->lexer);
 		// bu kısımda shell de gidicek çalışıp çalışmadığını konrol etmek için böyle bırakıldı
-		parser(shell->lexer);
+		parser(shell);
 	}
 }
 

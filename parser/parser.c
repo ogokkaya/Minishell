@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/09 15:13:11 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:21:45 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void parser(t_mshell *shell)
     t_lexer *current_token;
     t_ast *ast;
 
+    unquote_the_output(shell->lexer);
     current_token = shell->lexer;
     ast = NULL;
     while (current_token)

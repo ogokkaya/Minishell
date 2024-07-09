@@ -6,13 +6,63 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:45:47 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/09 14:14:24 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/09 15:20:20 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
 #include <stdio.h>
+
+static char *remove_quotes_from_content(char *content, char quote)
+{
+    int i;
+    int j;
+    int content_len;
+    char *new_content;
+
+    i = -1;
+    j = 0;
+    content_len = ft_strlen(content);
+    new_content = malloc(sizeof(char) * (content_len + 1));
+    while(++i < content_len)
+    {
+        if(content[i] != quote)
+        {
+            new_content[j++] = content[i];
+        }
+    }
+    if(new_content)
+    {
+        new_content[j] = '\0';
+        return(new_content);
+    }
+    return(content);
+
+}
+
+
+void unquote_the_output(t_lexer *lexer)
+{
+    char *lexer_content_trim;
+
+    while(lexer != NULL)
+    {
+        if(lexer->content[0] == '\'' && lexer->content[ft_strlen(lexer->content - 1) == '\''])
+        {
+            lexer_content_trim = remove_quotes_from_content(lexer->content, '\'');
+            free(lexer->content);
+            lexer->content = lexer_content_trim;
+        }
+        else
+        {
+            lexer_content_trim = remove_quotes_from_content(lexer->content, '\"');
+            free(lexer->content);
+            lexer->content = lexer_content_trim;
+        }
+        lexer = lexer->next;
+    }
+}
 
 int ft_lst_parser(t_lexer *lexer)
 {
