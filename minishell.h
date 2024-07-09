@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/08 22:04:00 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/09 14:05:45 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,12 @@
 
 typedef enum s_token_type
 {
-	TOKEN_PIPE = 1,
-	TOKEN_REDIRECT,
-	TOKEN_HEREDOC,
-	TOKEN_COMMAND
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_SINGLE_QUOTE,
+	TOKEN_DOUBLE_QUOTE
 }	t_token_type;
 
 //ENV STRUCT
@@ -75,13 +77,12 @@ typedef struct s_file
 
 typedef struct s_content
 {
-	char				*content;
+	char				**content;
 	t_token_type		type;
 }			t_content;
 
 typedef struct s_ast // echo test > test.txt | cat wc -l
 {
-	char		*command;
 	t_content	*content;
 	t_file		*input_file;
 	t_file		*output_file;
@@ -132,21 +133,17 @@ void	ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
 
 //expander
 void expander(t_mshell *shell, t_lexer *lexer);
-char *find_env(t_mshell *shell, char *path);
 int *exit_status(void);
 int check_quotes(const char *before, const char *after);
+char *find_env(t_mshell *shell, char *path);
 
 
 //parser
-void parser(t_lexer *lexer);
-void unquote_the_output(t_lexer *lexer);
-
-
-
-/* t_ast   *create_parser_node(t_mshell *shell, t_lexer *lexer);
-void	ft_listadd_back_ast(t_ast **lst, t_ast *new);
-int		pipe_count(t_mshell *shell);
-void	parser(t_mshell *shell); */
+t_ast   	*create_parser_node(t_lexer *lexer);
+void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
+void		parser(t_mshell *shell);
+t_content	*ft_listnew_content(char *content, t_mshell *shell);
+void		ft_listadd_back_content(t_content **lst, t_content *new);
 
 
 #endif

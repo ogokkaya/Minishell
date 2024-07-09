@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/08 22:06:00 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/09 15:13:11 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,49 @@
 
 #include <stdio.h>
 
+void parse_command_and_args(t_ast *ast, t_lexer **current_token, t_mshell *shell) 
+{    
+    t_ast *new_node;
+    int i = 0;
 
-
-
-
-void parser(t_lexer *lexer)
-{
-    unquote_the_output(lexer);
-    while(lexer != NULL)
+    (void)shell;
+    (void)ast;
+    new_node = create_parser_node(*current_token);
+    if (!new_node)
+        exit(1); //RETURN ERROR
+    new_node->content->type = (*current_token)->type;
+    new_node->content->content[i] = ft_strdup((*current_token)->content);
+    (*current_token) = (*current_token)->next;
+    while ((*current_token) && (*current_token)->type == TOKEN_WORD)
     {
-        printf("%s\n", lexer->content);
-        lexer = lexer->next;
+        new_node->content->content[++i] = ft_strdup((*current_token)->content);
+        (*current_token) = (*current_token)->next;
+        printf("content: %s\n", new_node->content->content[i]);
+    }
+}
+// echo bdemirbu 
+
+void parser(t_mshell *shell)
+{
+    t_lexer *current_token;
+    t_ast *ast;
+
+    current_token = shell->lexer;
+    ast = NULL;
+    while (current_token)
+    {
+        if (current_token->type == TOKEN_WORD)
+            parse_command_and_args(ast, &current_token, shell);
     }
 }
 
+// echo asd eqw >> test.txt | cat -l
 
-
-
-/* void parser(t_mshell *shell)
-{
-    t_lexer *ptr;
-
-    ptr = shell->lexer;
-    while (ptr != NULL)
-    {
-        ft_listadd_back_ast(&shell->ast, create_parser_node(shell, ptr));
-        ptr = ptr->next;
-    }
-
-    while (shell->ast != NULL)
-    {
-        printf("content: %s\n", shell->ast->content->content);
-        printf("type: %d\n", shell->ast->content->type);
-        
-        shell->ast = shell->ast->next;
-    }
-    
-} */
+// echo
+// asd
+// eqw
+// >>
+// test.txt
+// |
+// cat
+// -l
