@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/09 15:20:36 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/12 00:37:36 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,8 @@ void expander(t_mshell *shell, t_lexer *lexer);
 int *exit_status(void);
 int check_quotes(const char *before, const char *after);
 char *find_env(t_mshell *shell, char *path);
+char	*ft_strchr_dollar(const char *s);
+
 
 
 //parser

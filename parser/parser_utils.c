@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:45:47 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/09 15:20:20 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/12 00:35:37 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,9 @@ int ft_lst_parser(t_lexer *lexer)
 t_ast *create_parser_node(t_lexer *lexer_ptr)
 {
     t_ast *node;
-    t_lexer *lexer;
     int i;
 
     i = ft_lst_parser(lexer_ptr);
-    lexer = lexer_ptr;
     node = ft_calloc(1, sizeof(t_ast));
     if (!node)
         return NULL;

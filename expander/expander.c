@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/08 23:12:33 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/12 13:16:54 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,19 @@ static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar
     int index;
     
     index = 0;
-    if(after_dollar[0] == '$' && ft_strcmp(after_dollar, "$") != 0)
-    {
-        while(after_dollar[index++])
-            if(!ft_isalnum(after_dollar[index]))
-                break;
-        var_name = ft_substr(after_dollar , 1, --index);
-        expand = find_env(shell, var_name);
-        dollar_changed = ft_strjoin(expand, &after_dollar[++index]);
-        free(lexer->content);
-        lexer->content = ft_strjoin(before_dollar, dollar_changed);
-        free(var_name);
-        free(expand);
-        free(dollar_changed);
-        if(!lexer->content)
-            return(perror("dollar_changed"), FALSE);
-    }
+    while(after_dollar[index++])
+        if(!ft_isalnum(after_dollar[index]))
+            break;
+    var_name = ft_substr(after_dollar , 1, --index);
+    expand = find_env(shell, var_name);
+    dollar_changed = ft_strjoin(expand, &after_dollar[++index]);
+    free(lexer->content);
+    lexer->content = ft_strjoin(before_dollar, dollar_changed);
+    free(var_name);
+    free(expand);
+    free(dollar_changed);
+    if(!lexer->content)
+        return(perror("dollar_changed"), FALSE);
     return(TRUE);
 }
 static int expand_exit_status(t_lexer *lexer, char *before_dollar, char *after_dollar)
@@ -70,7 +67,7 @@ static int dollar_expander(t_mshell *shell,t_lexer *lexer, char *before_dollar, 
         if(expand_exit_status(lexer ,before_dollar, after_dollar) == FALSE)
                 return(FALSE);
     }
-    else
+    else if(after_dollar[0] == '$' && after_dollar[1])
     {
         if(expand_dollar_env(shell ,lexer, before_dollar, after_dollar) == FALSE)
             return(FALSE);
@@ -108,6 +105,32 @@ void expand_tilde(t_mshell *shell, t_lexer *lexer)
         free(home);
 }
 
+
+char	*ft_strchr_dollar(const char *s)
+{
+	int	i;
+
+	i = 0;
+	while (s[i])
+    {
+        if(s[i] == '$' && s[i + 1] == '$')
+            i++;
+        else if(s[i] == '$' && s[i + 1] != '$')
+            break;
+        i++;
+    }
+    /* if(s[i] == '$' && s[i + 1] == '$')
+        i++; */
+    if(s[i] == '$' && s[i + 1] == '\0')
+        return(NULL);
+	if (s[i] == '$' && s[i + 1] != '$')
+    {
+		return ((char *)&s[i]);
+    }
+	return (NULL);
+}
+
+// $$USER$$$HOME
 void expander(t_mshell *shell, t_lexer *lexer)
 {
     char *before_dollar;
@@ -117,7 +140,7 @@ void expander(t_mshell *shell, t_lexer *lexer)
     {
         if(lexer->content[0] == '~')
             expand_tilde(shell, lexer);
-        after_dollar = ft_strchr(lexer->content , '$');
+        after_dollar = ft_strchr_dollar(lexer->content);
         while(after_dollar)
         {
             before_dollar = ft_substr(lexer->content, 0, after_dollar - lexer->content);
@@ -127,12 +150,13 @@ void expander(t_mshell *shell, t_lexer *lexer)
             {
                 if(dollar_expander(shell ,lexer, before_dollar, after_dollar) == FALSE)
                     return(free(before_dollar),end_malloc(shell), exit(1));
-                after_dollar = ft_strchr(after_dollar + 1, '$');
+                after_dollar = ft_strchr_dollar(lexer->content);
             }
             else
-                after_dollar = ft_strchr(after_dollar + 1, '$');
+                after_dollar = ft_strchr_dollar(after_dollar + 1);
             free(before_dollar);
         }
+        printf("%s\n", lexer->content);
         lexer = lexer->next;
     }
 }
