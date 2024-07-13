@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/12 00:37:36 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/14 00:58:59 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@
 
 typedef enum s_token_type
 {
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIR_IN,
-	TOKEN_REDIR_OUT,
-	TOKEN_SINGLE_QUOTE,
-	TOKEN_DOUBLE_QUOTE
-}	t_token_type;
+    TOKEN_WORD,
+    TOKEN_PIPE,
+    TOKEN_REDIR_IN,
+    TOKEN_REDIR_OUT,
+    TOKEN_REDIR_APPEND,
+    TOKEN_HEREDOC
+	
+} t_token_type;
 
 //ENV STRUCT
 typedef struct s_env
@@ -67,35 +68,36 @@ typedef struct s_block
 	struct s_block	*next;
 }					t_block;
 
-//ABSTRACT SYNTAX TREE
+typedef struct s_redirection
+{
+	char *content;
+	int redir_fd;
+	int flags;
+}	t_redirection;
+
 typedef struct s_file
 {
-	char	*name;
-	int		double_op;
-	int		fd;
+	int	inp_fd;
+	int	out_fd;
+	int	*prev_file;
+	int	*next_file;
 }	t_file;
 
-typedef struct s_content
+typedef struct s_command // echo test > test.txt | cat wc -l
 {
-	char				**content;
-	t_token_type		type;
-}			t_content;
-
-typedef struct s_ast // echo test > test.txt | cat wc -l
-{
-	t_content	*content;
-	t_file		*input_file;
-	t_file		*output_file;
-	pid_t		p_id;
-	struct s_ast	*next;
-	struct s_ast	*prev;
-} t_ast;
+	char 				**args;
+	t_redirection		*redirection;
+	t_file				file;
+	struct s_command	*next;
+	struct s_command 	*prev;
+} t_command;
 
 //MAIN STRUCT
 typedef struct s_mshell
 {
 	char			*input;
 	struct s_block	*block;
+	struct s_command *command;
 	struct s_lexer  *lexer;
 	struct s_env	*env;
 	struct s_ast	*ast;
@@ -141,12 +143,12 @@ char	*ft_strchr_dollar(const char *s);
 
 
 //parser
-t_ast   	*create_parser_node(t_lexer *lexer);
-void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
+//t_ast   	*create_parser_node(t_lexer *lexer);
+//void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
 void		parser(t_mshell *shell);
-t_content	*ft_listnew_content(char *content, t_mshell *shell);
-void		ft_listadd_back_content(t_content **lst, t_content *new);
-void		unquote_the_output(t_lexer *lexer);
+void	ft_lstadd_parser(t_command **lst, t_command *new);
+
+//void		unquote_the_output(t_lexer *lexer);
 
 
 #endif

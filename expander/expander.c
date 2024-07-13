@@ -6,14 +6,13 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/12 13:16:54 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/12 22:34:11 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <stdio.h>
 
-// düzenlenicek olağan ve olağan dışı çıkışlar kontrol edilecek
 static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
 {
     char *var_name;
@@ -28,16 +27,16 @@ static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar
     var_name = ft_substr(after_dollar , 1, --index);
     expand = find_env(shell, var_name);
     dollar_changed = ft_strjoin(expand, &after_dollar[++index]);
-    free(lexer->content);
     lexer->content = ft_strjoin(before_dollar, dollar_changed);
     free(var_name);
     free(expand);
     free(dollar_changed);
     if(!lexer->content)
         return(perror("dollar_changed"), FALSE);
+    my_malloc(shell->block, lexer->content);
     return(TRUE);
 }
-static int expand_exit_status(t_lexer *lexer, char *before_dollar, char *after_dollar)
+static int expand_exit_status(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
 {
     char *status;
     char *after_dollar_changed;
@@ -52,11 +51,10 @@ static int expand_exit_status(t_lexer *lexer, char *before_dollar, char *after_d
     free(after_dollar_changed);
     if(!changed_input)
         return(perror("changed_input"), FALSE);
-    //my_malloc dan çıkarılacak ve oraya eklenecek
-    free(lexer->content);
     lexer->content = ft_strjoin(before_dollar, changed_input);
     if(!lexer->content)
         return(perror("lexer->content"), FALSE);
+    my_malloc(shell->block, lexer->content);
     return(TRUE);
 }
 
@@ -64,7 +62,7 @@ static int dollar_expander(t_mshell *shell,t_lexer *lexer, char *before_dollar, 
 {
     if(after_dollar[0] == '$' && after_dollar[1] == '?')
     {
-        if(expand_exit_status(lexer ,before_dollar, after_dollar) == FALSE)
+        if(expand_exit_status(shell ,lexer ,before_dollar , after_dollar) == FALSE)
                 return(FALSE);
     }
     else if(after_dollar[0] == '$' && after_dollar[1])
@@ -89,22 +87,20 @@ void expand_tilde(t_mshell *shell, t_lexer *lexer)
         complete_home = ft_strdup(lexer->content);
         if(!complete_home)
             return(perror("complete_home"), free(home), end_malloc(shell), exit(1));
-        free(lexer->content),
         lexer->content = ft_strjoin(home, complete_home + 1);
         free(home);
         if(!lexer->content)
             return(perror("~"),free(complete_home), end_malloc(shell), exit(1));
-        // block structından lexer ın bu adresi çıkartılacak yada direkt free(lexer->content)
+        my_malloc(shell->block, lexer->content);
     }
     else if(lexer->content[0] == '~' && lexer->content[1] == '\0')
     {
-        // block structından lexer ın bu adresi çıkartılacak yada direkt free(lexer->content)
         lexer->content = home;
+        my_malloc(shell->block, lexer->content);
     }
     else
         free(home);
 }
-
 
 char	*ft_strchr_dollar(const char *s)
 {
@@ -119,8 +115,8 @@ char	*ft_strchr_dollar(const char *s)
             break;
         i++;
     }
-    /* if(s[i] == '$' && s[i + 1] == '$')
-        i++; */
+    if(s[i] == '$' && s[i + 1] == '$')
+        i++;
     if(s[i] == '$' && s[i + 1] == '\0')
         return(NULL);
 	if (s[i] == '$' && s[i + 1] != '$')
@@ -136,27 +132,22 @@ void expander(t_mshell *shell, t_lexer *lexer)
     char *before_dollar;
     char *after_dollar;
 
-    while(lexer != NULL)
+    if(lexer->content[0] == '~')
+        expand_tilde(shell, lexer);
+    after_dollar = ft_strchr_dollar(lexer->content);
+    while(after_dollar)
     {
-        if(lexer->content[0] == '~')
-            expand_tilde(shell, lexer);
-        after_dollar = ft_strchr_dollar(lexer->content);
-        while(after_dollar)
+        before_dollar = ft_substr(lexer->content, 0, after_dollar - lexer->content);
+        if(!before_dollar)
+            return(perror("before_dollar"), end_malloc(shell), exit(1));
+        else if(check_quotes(before_dollar, after_dollar))
         {
-            before_dollar = ft_substr(lexer->content, 0, after_dollar - lexer->content);
-            if(!before_dollar)
-                return(perror("before_dollar"), end_malloc(shell), exit(1));
-            else if(check_quotes(before_dollar, after_dollar))
-            {
-                if(dollar_expander(shell ,lexer, before_dollar, after_dollar) == FALSE)
-                    return(free(before_dollar),end_malloc(shell), exit(1));
-                after_dollar = ft_strchr_dollar(lexer->content);
-            }
-            else
-                after_dollar = ft_strchr_dollar(after_dollar + 1);
-            free(before_dollar);
+            if(dollar_expander(shell ,lexer, before_dollar, after_dollar) == FALSE)
+                return(free(before_dollar),end_malloc(shell), exit(1));
+            after_dollar = ft_strchr_dollar(lexer->content);
         }
-        printf("%s\n", lexer->content);
-        lexer = lexer->next;
+        else
+            after_dollar = ft_strchr_dollar(after_dollar + 1);
+        free(before_dollar);
     }
 }

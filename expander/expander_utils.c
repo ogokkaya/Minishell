@@ -1,6 +1,7 @@
 #include "../minishell.h"
 #include <stdio.h>
 
+
 char *find_env(t_mshell *shell, char *path)
 {
     t_env *search_env;

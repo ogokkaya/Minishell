@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 13:53:37 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/09 15:18:11 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/13 22:37:15 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,14 @@ static int	get_next_token_length(char *input)
 
 static t_token_type determine_token_type(char *token)
 {
-	if(ft_strcmp(token, "<") == 0 || ft_strcmp(token, ">") == 0 || ft_strcmp(token, ">>") == 0 || ft_strcmp(token, "<<") == 0)
+	if(ft_strncmp(token, "<<", 2) == 0)
+		return(TOKEN_HEREDOC);
+	if(ft_strncmp(token, ">>", 2) == 0)
+		return(TOKEN_REDIR_APPEND);
+	if(ft_strncmp(token, "<", 1) == 0)
 		return(TOKEN_REDIR_IN);
+	if(ft_strncmp(token, ">", 1) == 0)
+		return(TOKEN_REDIR_OUT);
 	if(ft_strcmp(token, "|") == 0)
 		return(TOKEN_PIPE);
 	return(TOKEN_WORD);
@@ -63,7 +69,6 @@ static void	parse_command_tokens(char *input, t_mshell *shell)
 	t_token_type type;
 	char	*next_input_tmp;
 
-	len = 0;
 	while (input && *input)
 	{
 		len = get_next_token_length(input);

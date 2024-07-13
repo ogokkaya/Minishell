@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/12 00:35:24 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/13 16:08:28 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int	shell_start_init(char **env, t_mshell *shell)
 {
 	shell->env = NULL;
 	shell->lexer = NULL;
+	shell->command = NULL;
 	shell->block = malloc_starter();
 	if (get_env(env, shell) == FALSE)
 		return (printf(MALLOC), FALSE);
@@ -55,9 +56,8 @@ int	loop_shell(t_mshell *shell)
 	{
 		read_line_cycle(shell);
 		lexer(shell);
-		expander(shell, shell->lexer);
-		// bu kısımda shell de gidicek çalışıp çalışmadığını konrol etmek için böyle bırakıldı
-		//parser(shell);
+		parser(shell);
+		free(shell->input);
 	}
 }
 
