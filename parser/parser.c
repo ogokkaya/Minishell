@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/14 00:58:40 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/16 15:20:20 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void parsing_init(t_mshell *shell, t_lexer **lexer)
     redir_count = 0;
     arg_count = 0;
     count_arg_for_parser(&(*lexer), &redir_count, &arg_count);
-    //printf("%d\n", arg_count);
-    //printf("%d\n", redir_count);
+    printf("%d\n", arg_count);
+    printf("%d\n", redir_count);
     command = ft_calloc(1, sizeof(t_command));
     if(!command)
         return(perror("command"), end_malloc(shell), exit(1));
@@ -63,6 +63,28 @@ void parsing_init(t_mshell *shell, t_lexer **lexer)
     ft_lstadd_parser(&shell->command , command);
 }
 
+void parser_a(t_mshell *shell, t_lexer *lexer)
+{
+    int index = 0;
+    while(lexer != NULL)
+    {
+        if(lexer->type == TOKEN_WORD)
+        {
+            expander(shell, lexer);
+            shell->command->args[index] = lexer->content;
+            printf("%s\n", shell->command->args[index++]);
+        }
+        else if(lexer->type == TOKEN_HEREDOC)
+        {
+            lexer = lexer->next;
+            shell->command->redirection->content = lexer->content;
+            printf("%s\n", shell->command->redirection->content);
+            shell->command->redirection->flags = TOKEN_HEREDOC;
+        }
+        lexer = lexer->next;
+    }
+}
+
 void parser(t_mshell *shell)
 {
     t_lexer *lexer;
@@ -73,6 +95,7 @@ void parser(t_mshell *shell)
         parsing_init(shell, &lexer);
         lexer = lexer->next;
     }
+    parser_a(shell, shell->lexer);
 }
 
 // echo asd eqw >> test.txt | cat -l
