@@ -8,7 +8,8 @@ CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		env/env_utils.c env/get_env.c \
 		expander/expander.c expander/expander_utils.c lexer/lexer.c lexer/lexer_utils.c error_handling/error_handler.c \
 		input_control/input_controls.c input_control/input_control_utils.c \
-		parser/parser.c parser/parser_utils.c \
+		parser/parser.c parser/parser_utils.c parser/heredoc.c \
+		execute/execute.c execute/execute_path.c \
 
 		
 		

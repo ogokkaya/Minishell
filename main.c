@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/13 16:08:28 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/18 00:52:07 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	loop_shell(t_mshell *shell)
 		read_line_cycle(shell);
 		lexer(shell);
 		parser(shell);
+		execute(shell);
 		free(shell->input);
 	}
 }
