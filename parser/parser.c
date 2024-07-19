@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/17 22:32:26 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/19 17:44:19 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,7 @@ void parser_start(t_mshell *shell,t_command *command, t_lexer *lexer)
         {
             expander(shell, lexer);
             unquote_the_output(lexer);
-            shell->command->args[index] = lexer->content;
-            if(shell->command->args[index + 1])
-                    index++;
-            printf("%s\n", shell->command->args[index]);
+            command->args[index++] = lexer->content;
         }
         if(lexer->type == TOKEN_PIPE)
         {
@@ -92,7 +89,7 @@ void parser_start(t_mshell *shell,t_command *command, t_lexer *lexer)
             command = command->next;
         }
         if(lexer->type != TOKEN_WORD && lexer->type != TOKEN_PIPE)
-            redirection(shell ,&shell->command, &lexer);
+            redirection(shell ,&command, &lexer);
         lexer = lexer->next;
     }
     // pipe açılırken status düşünülecek

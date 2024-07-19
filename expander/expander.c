@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/12 22:34:11 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/19 17:05:02 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,9 @@ char	*ft_strchr_dollar(const char *s)
 	i = 0;
 	while (s[i])
     {
-        if(s[i] == '$' && s[i + 1] == '$')
+        if(s[i] == '$' && s[i + 1] &&s[i + 1] == '$')
+            i++;
+        else if(s[i] == '$' && s[i + 1] && !ft_isalnum(s[i + 1]))
             i++;
         else if(s[i] == '$' && s[i + 1] != '$')
             break;
