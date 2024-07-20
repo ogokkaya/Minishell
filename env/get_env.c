@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:22:49 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 00:47:45 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/16 16:49:22 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,4 +61,21 @@ int get_env(char **env, t_mshell *shell)
 		env++;
 	}
 	return(TRUE);
+}
+
+void	change_env(t_mshell *shell, char *name, char *content)
+{
+	t_env *tmp;
+
+	tmp = shell->env;
+	while(tmp)
+	{
+		if(ft_strcmp(tmp->name, name) == 0)
+		{
+			free(tmp->content);
+			tmp->content = ft_strdup(content);
+			return;
+		}
+		tmp = tmp->next;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 12:26:09 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/11 16:13:59 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/20 13:20:23 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,54 +15,41 @@
 
 static int flag_validator(char *flag)
 {
-    int i;
-
-    i = 0;
     if (!flag)
         return (0);
-    while (flag[i] != '-' && flag[i] != '\0')
-        i++;
-    if (flag[i] == '-')
-        i++;
-    if (!flag[i])
+    if (flag[0] != '-')
         return (0);
-    while (flag[i])
-    {
-        if (flag[i] != 'n')
-            return (0);
-        i++;
-    }
+    if (!flag[0])
+        return (0);
+    if (flag[1] != 'n')
+        return (0);
     return (1);
 }
 
-static int flag_counter(char *flags)
+static int flag_counter(t_lexer *lexer)
 {
-    int i;
-    int count;
-    
-    i = 0;
-    while (flags[i] && flags)
+    int i = 0;
+
+    while (lexer && lexer->content && lexer->next)
     {
-        if (flag_validator(flags) == 0)
-            break;
-        i++;
+        if (flag_validator(lexer->content) == 1)
+            i++;
+        lexer = lexer->next;
     }
     return (i);
 }
 void echo_put(t_lexer *lexer, int fd)
 {
-    int i;
     int flag_count;
-    char *flags;
-
-    flags  = lexer->content;
-    if (flag_counter(flags) != 0)
+    int i = 0;
+    flag_count = flag_counter(lexer);
+    lexer = lexer->next;
+    while (i++ < flag_count)
         lexer = lexer->next;
-    flag_count = flag_counter(flags);
     while (lexer)
     {
         ft_putstr_fd(lexer->content, fd);
-        if(lexer->next && lexer->next->content && lexer->next->type == TOKEN_WORD)
+        if (lexer->next && lexer->next->content && lexer->next->type == TOKEN_WORD)
             ft_putstr_fd(" ", fd);
         lexer = lexer->next;
     }
@@ -70,31 +57,8 @@ void echo_put(t_lexer *lexer, int fd)
         ft_putstr_fd("\n", fd);
 }
 
-int echo(t_lexer *lexer)
+int echo(t_mshell *lexer)
 {
-    echo_put(lexer, 1);
+    echo_put(lexer->lexer, 1);
     return (TRUE);
-}
-
-int main()
-{
-    t_lexer *lexer;
-
-    lexer = malloc(sizeof(t_lexer));
-    lexer->content = "echoaoekpfaeo";
-    lexer->type = TOKEN_WORD;
-    lexer->next = malloc(sizeof(t_lexer));
-    lexer->next->content = "kaofea";
-    lexer->next->type = TOKEN_WORD;
-    lexer->next->next = malloc(sizeof(t_lexer));
-    lexer->next->next->content = "-n";
-    lexer->next->next->type = TOKEN_WORD;
-    lexer->next->next->next = malloc(sizeof(t_lexer));
-    lexer->next->next->next->content = "world";
-    lexer->next->next->next->type = TOKEN_WORD;
-    lexer->next->next->next->next = NULL;
-
-    lexer = lexer->next;
-    echo(lexer);    
-    return (0);
 }

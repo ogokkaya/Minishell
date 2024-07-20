@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/16 15:20:20 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/20 13:21:29 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ void parsing_init(t_mshell *shell, t_lexer **lexer)
     redir_count = 0;
     arg_count = 0;
     count_arg_for_parser(&(*lexer), &redir_count, &arg_count);
-    printf("%d\n", arg_count);
-    printf("%d\n", redir_count);
+   // printf("%d\n", arg_count);
+   // printf("%d\n", redir_count);
     command = ft_calloc(1, sizeof(t_command));
     if(!command)
         return(perror("command"), end_malloc(shell), exit(1));
@@ -72,13 +72,13 @@ void parser_a(t_mshell *shell, t_lexer *lexer)
         {
             expander(shell, lexer);
             shell->command->args[index] = lexer->content;
-            printf("%s\n", shell->command->args[index++]);
+            //printf("%s\n", shell->command->args[index++]);
         }
         else if(lexer->type == TOKEN_HEREDOC)
         {
             lexer = lexer->next;
             shell->command->redirection->content = lexer->content;
-            printf("%s\n", shell->command->redirection->content);
+            //printf("%s\n", shell->command->redirection->content);
             shell->command->redirection->flags = TOKEN_HEREDOC;
         }
         lexer = lexer->next;

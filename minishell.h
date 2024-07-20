@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/14 00:58:59 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/19 17:27:38 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,11 @@ char	*ft_strchr_dollar(const char *s);
 //void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
 void		parser(t_mshell *shell);
 void	ft_lstadd_parser(t_command **lst, t_command *new);
+
+//builtin
+void	change_env(t_mshell *shell, char *name, char *content);
+int cd(t_mshell *shell);
+int echo(t_mshell *lexer);
 
 //void		unquote_the_output(t_lexer *lexer);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/13 16:08:28 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/20 13:24:57 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,19 @@ int	loop_shell(t_mshell *shell)
 		lexer(shell);
 		parser(shell);
 		free(shell->input);
+		if (!(ft_strcmp(shell->lexer->content, "cd")))
+			cd(shell);
+		else if (!(ft_strcmp(shell->lexer->content, "echo")))
+			echo(shell);
+		shell->lexer = NULL;
+/* 		t_mshell *tmp = shell;
+
+		while(tmp->lexer)
+		{
+			printf("PWD: %s\n", find_env(tmp, "PWD"));
+			printf("OLDPWD: %s\n", find_env(tmp, "OLDPWD"));
+			tmp->lexer = tmp->lexer->next;
+		} */
 	}
 }
 
