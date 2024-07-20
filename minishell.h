@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/20 13:59:02 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/20 15:37:03 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,6 @@ void		unquote_the_output(t_lexer *lexer);
 //builtin
 int cd(t_mshell *shell);
 int echo(t_mshell *shell);
+int pwd();
 
 #endif

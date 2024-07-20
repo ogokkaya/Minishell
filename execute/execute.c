@@ -4,18 +4,18 @@ void builtin_start(t_mshell *shell , t_command *command)
 {
     if((ft_strcmp(command->args[0], "echo") == 0) || (ft_strcmp(command->args[0], "ECHO") == 0))
        echo(shell);
-   /*  else if((ft_strcmp(command->args[0], "env") == 0) || (ft_strcmp(command->args[0], "ENV") == 0))
-        builtin_env();
+    /* else if((ft_strcmp(command->args[0], "env") == 0) || (ft_strcmp(command->args[0], "ENV") == 0))
+        env(); */
     else if((ft_strcmp(command->args[0], "pwd") == 0) || (ft_strcmp(command->args[0], "PWD") == 0))
-        builtin_pwd(); */
+        pwd();
     else if(ft_strcmp(command->args[0], "cd") == 0)
         cd(shell);
-    /* else if(ft_strcmp(command->args[0], "unset") == 0)
-        builtin_unset();
+   /*  else if(ft_strcmp(command->args[0], "unset") == 0)
+        unset();
     else if(ft_strcmp(command->args[0], "export") == 0)
-        builtin_export();
+        export();
     else if(ft_strcmp(command->args[0], "exit") == 0)
-        builtin_exit(); */
+        exit(); */
 }
 
 
@@ -53,12 +53,12 @@ void execve_start(t_mshell *shell, t_command *command)
 }
 
 
-static int executive(t_mshell *shell,t_command **command)
+static int executive(t_mshell *shell, t_command *command)  // receive a single pointer
 {
-    if(builtin_control((*command)->args[0]) == TRUE)
-        builtin_start(shell ,(*command));
-    //if(pipe_check(&(*command)) == TRUE)
-    //execve_start(shell, (*command));
+    if(builtin_control(command->args[0]) == TRUE)
+        builtin_start(shell, command);
+    //if(pipe_check(&command) == TRUE)
+    //execve_start(shell, command);
     (void)shell;
     return(0);
 }
@@ -70,7 +70,7 @@ void execute(t_mshell *shell)
     command = shell->command;
     while(command != NULL)
     {
-        executive(shell ,&command);
+        executive(shell, command);  // pass command directly
         command = command->next;
     }
 }

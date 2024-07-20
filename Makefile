@@ -10,7 +10,7 @@ CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		input_control/input_controls.c input_control/input_control_utils.c \
 		parser/parser.c parser/parser_utils.c parser/heredoc.c \
 		execute/execute.c execute/execute_path.c \
-		builtins/cd.c builtins/echo.c\
+		builtins/cd.c builtins/echo.c builtins/pwd.c\
 
 
 		
