@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/20 16:28:49 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:58:19 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,23 +55,16 @@ void	redirection(t_mshell *shell, t_command **command, t_lexer **lexer)
 {
 	int	index;
 
-	index = 0;
-	while ((*lexer) != NULL && (*lexer)->type != TOKEN_WORD
-		&& (*lexer)->type != TOKEN_PIPE)
-	{
-		if ((*lexer)->type == TOKEN_HEREDOC && (*lexer)->next != NULL)
-		{
-			(*lexer) = (*lexer)->next;
-			heredoc_start(shell, &(*command)->redirection[index],
-				(*lexer)->content);
-		}
-		else
-			file_creation(shell, &(*command)->redirection[index], &(*lexer));
-		if ((*lexer)->next != NULL)
-			(*lexer) = (*lexer)->next;
-		else if (&(*command)->redirection[index + 1])
-			index++;
-	}
+    index = 0;
+    if ((*lexer)->type == TOKEN_HEREDOC && (*lexer)->next != NULL)
+    {
+        (*lexer) = (*lexer)->next;
+        heredoc_start(shell ,&(*command)->redirection[index],(*lexer)->content);
+    }
+    else
+        file_creation(shell ,&(*command)->redirection[index], &(*lexer));
+    if(&(*command)->redirection[index + 1])
+        index++;
 }
 
 void	parser_start(t_mshell *shell, t_command *command, t_lexer *lexer)

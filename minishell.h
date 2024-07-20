@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/20 16:24:54 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/20 18:02:49 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # define DOUBLE_QUOTE '\"'
 
 // PRINT_DEFINES
-# define PROMT "minishell$"
+# define PROMT "minishell$ "
 // ERROR
 # define MALLOC "Error\nCould not allocate memory\n"
 # define ARG "Error\nThe program can only run without arguments\n"
@@ -154,5 +154,6 @@ void					unquote_the_output(t_mshell *shell, t_lexer *lexer);
 int						cd(t_mshell *shell);
 int						echo(t_mshell *shell);
 int						pwd(void);
+int						env(t_env *env, t_command *command);
 
 #endif

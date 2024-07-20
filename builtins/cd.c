@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:18:18 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/20 14:05:11 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/20 17:48:18 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-/* static int cd_updater(t_mshell *shell, char *old_pwd)
-{
-        (void)shell;
-		if (!old_pwd)
-		    return (printf("OLDPWD not set"), 1);
-	    	//ft_exit_value(EXIT_SET, 1, 0);
-	    if (chdir(old_pwd) == -1)
-	    	return (printf("No such file or directory"), 1);
-
-        //BURADA HATA KONTROLLERİ VE CHDIR ILE PWD VE OLDPWD KONTROLLERI YAPILACAK 
-        //VE HATA KODU DEĞİŞİP DÖNÜLECEK
-    return (0);
-} */
 
 int _home(t_mshell *shell)
 {

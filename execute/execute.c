@@ -5,9 +5,9 @@ void	builtin_start(t_mshell *shell, t_command *command)
 	if ((ft_strcmp(command->args[0], "echo") == 0)
 		|| (ft_strcmp(command->args[0], "ECHO") == 0))
 		echo(shell);
-	/* else if((ft_strcmp(command->args[0], "env") == 0)
+	else if((ft_strcmp(command->args[0], "env") == 0)
 		|| (ft_strcmp(command->args[0], "ENV") == 0))
-		env(); */
+		env(shell->env, command);
 	else if ((ft_strcmp(command->args[0], "pwd") == 0)
 		|| (ft_strcmp(command->args[0], "PWD") == 0))
 		pwd();
