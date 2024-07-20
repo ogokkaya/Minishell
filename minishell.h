@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/20 15:37:03 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:24:54 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include "./libft/libft.h"
-#include <stdio.h>
+# include <stdio.h>
 
 # define TRUE 0
 # define FALSE 1
@@ -31,128 +31,128 @@
 
 // PRINT_DEFINES
 # define PROMT "minishell$"
-//ERROR
+// ERROR
 # define MALLOC "Error\nCould not allocate memory\n"
-#define ARG "Error\nThe program can only run without arguments\n"
+# define ARG "Error\nThe program can only run without arguments\n"
 
 typedef enum s_token_type
 {
-    TOKEN_WORD,
-    TOKEN_PIPE,
-    TOKEN_REDIR_IN,
-    TOKEN_REDIR_OUT,
-    TOKEN_REDIR_APPEND,
-    TOKEN_HEREDOC
-	
-} t_token_type;
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIR_IN,
+	TOKEN_REDIR_OUT,
+	TOKEN_REDIR_APPEND,
+	TOKEN_HEREDOC
 
-//ENV STRUCT
+}						t_token_type;
+
+// ENV STRUCT
 typedef struct s_env
 {
-	char			*name;
-	char			*content;
-	struct s_env	*next;
-}					t_env;
+	char				*name;
+	char				*content;
+	struct s_env		*next;
+}						t_env;
 
-//LEXER STRUCT
+// LEXER STRUCT
 typedef struct s_lexer
 {
-	char			*content;
-	t_token_type 	type;
-	struct s_lexer	*next;
-}			t_lexer;
+	char				*content;
+	t_token_type		type;
+	struct s_lexer		*next;
+}						t_lexer;
 
-//MEMORY STRUCT
+// MEMORY STRUCT
 typedef struct s_block
 {
-	void			*allocate;
-	struct s_block	*next;
-}					t_block;
+	void				*allocate;
+	struct s_block		*next;
+}						t_block;
 
 typedef struct s_redirection
 {
-	int redir_fd;
-	int stdin;
-	int stdout;
-}	t_redirection;
+	int					redir_fd;
+	int					stdin;
+	int					stdout;
+}						t_redirection;
 
 typedef struct s_command // echo test > test.txt | cat wc -l
 {
-	char 				**args;
-	t_redirection		*redirection;
-	int 				stdin;
-	int 				stdout;
-	int 				pipe_fd[2];
-	struct s_command	*next;
-	struct s_command 	*prev;
-} t_command;
+	char **args;
+	t_redirection *redirection;
+	int stdin;
+	int stdout;
+	int pipe_fd[2];
+	struct s_command *next;
+	struct s_command *prev;
+}						t_command;
 
-//MAIN STRUCT
+// MAIN STRUCT
 typedef struct s_mshell
 {
-	char			*input;
-	struct s_block	*block;
-	struct s_command *command;
-	struct s_lexer  *lexer;
-	struct s_env	*env;
-	struct s_ast	*ast;
-}					t_mshell;
+	char				*input;
+	struct s_block		*block;
+	struct s_command	*command;
+	struct s_lexer		*lexer;
+	struct s_env		*env;
+	struct s_ast		*ast;
+}						t_mshell;
 
 // input_control
-int			line_verify(char *line);
-int			ft_space(char c);
-
+int						line_verify(char *line);
+int						ft_space(char c);
 
 // memory monitor
-void				*my_malloc(t_block *block, void *address);
-void				free_malloc(t_block *block, void *delete_adress);
-void				ft_lstdelone_memory(t_block *lst, void (*del)(void *));
-void				end_malloc(t_mshell *shell);
-t_block				*ft_lstnew_memory(void *content);
-void				ft_lstadd_back_memory(t_block **lst, t_block *new);
-void				ft_lstclear_memory(t_block **lst, void (*del)(void *));
-t_block				*malloc_starter(void);
+void					*my_malloc(t_block *block, void *address);
+void					free_malloc(t_block *block, void *delete_adress);
+void					ft_lstdelone_memory(t_block *lst, void (*del)(void *));
+void					end_malloc(t_mshell *shell);
+t_block					*ft_lstnew_memory(void *content);
+void					ft_lstadd_back_memory(t_block **lst, t_block *new);
+void					ft_lstclear_memory(t_block **lst, void (*del)(void *));
+t_block					*malloc_starter(void);
 
 // error handling
-void				error_exit(char *error_message, t_mshell *shell,
-						int free_flag);
+void					error_exit(char *error_message, t_mshell *shell,
+							int free_flag);
 
 // env
-t_env				*ft_lstnew_env(char *str, char *ptr);
-void				ft_lstadd_back_env(t_env **lst, t_env *new);
-int					get_env(char **env, t_mshell *shell);
-void				free_env(t_mshell *shell);
-void	change_env(t_mshell *shell, char *name, char *content);
+t_env					*ft_lstnew_env(char *str, char *ptr);
+void					ft_lstadd_back_env(t_env **lst, t_env *new);
+int						get_env(char **env, t_mshell *shell);
+void					free_env(t_mshell *shell);
+void					change_env(t_mshell *shell, char *name, char *content);
 
 // lexer
-void 		lexer(t_mshell *shell);
-t_lexer	*ft_lstnew_lexer(t_mshell *shell ,char *content, t_token_type type);
-void	ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
+void					lexer(t_mshell *shell);
+t_lexer					*ft_lstnew_lexer(t_mshell *shell, char *content,
+							t_token_type type);
+void					ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
 
-//expander
-void expander(t_mshell *shell, t_lexer *lexer);
-int *exit_status(void);
-int check_quotes(const char *before, const char *after);
-char *find_env(t_mshell *shell, char *path);
-char	*ft_strchr_dollar(const char *s);
+// expander
+void					expander(t_mshell *shell, t_lexer *lexer);
+int						*exit_status(void);
+int						check_quotes(const char *before, const char *after);
+char					*find_env(t_mshell *shell, char *path);
+char					*ft_strchr_dollar(const char *s);
 
 // execute
-char	*find_path(t_mshell *shell, t_command **command);
-void 	execute(t_mshell *shell);
+char					*find_path(t_mshell *shell, t_command **command);
+void					execute(t_mshell *shell);
 
+// parser
+// t_ast   	*create_parser_node(t_lexer *lexer);
+// void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
+void					parser(t_mshell *shell);
+void					ft_lstadd_parser(t_command **lst, t_command *new);
+int						heredoc_start(t_mshell *shell,
+							t_redirection *redirection, char *delimeter);
+void					parser_init(t_mshell *shell, t_lexer **lexer);
+void					unquote_the_output(t_mshell *shell, t_lexer *lexer);
 
-//parser
-//t_ast   	*create_parser_node(t_lexer *lexer);
-//void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
-void		parser(t_mshell *shell);
-void		ft_lstadd_parser(t_command **lst, t_command *new);
-int 		heredoc_start(t_mshell *shell,t_redirection *redirection,char *delimeter);
-void 		parser_init(t_mshell *shell, t_lexer **lexer);
-void		unquote_the_output(t_lexer *lexer);
-
-//builtin
-int cd(t_mshell *shell);
-int echo(t_mshell *shell);
-int pwd();
+// builtin
+int						cd(t_mshell *shell);
+int						echo(t_mshell *shell);
+int						pwd(void);
 
 #endif

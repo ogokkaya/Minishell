@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/20 14:05:54 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/20 16:28:18 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include <stdio.h>
 #include <./readline/history.h>
 #include <./readline/readline.h>
+#include <stdio.h>
 
 int	shell_start_init(char **env, t_mshell *shell)
 {
@@ -32,7 +32,7 @@ void	read_line_cycle(t_mshell *shell)
 	if (!shell->input)
 	{
 		end_malloc(shell);
-		//rl_clear_history();
+		// rl_clear_history();
 		exit(1);
 	}
 	if (shell->input && !ft_isspace(shell->input))
@@ -58,15 +58,9 @@ int	loop_shell(t_mshell *shell)
 		lexer(shell);
 		parser(shell);
 		execute(shell);
+		free(shell->lexer);
+		shell->lexer = NULL;
 		free(shell->input);
-			
-		t_mshell *tmp = shell;
-		while(tmp->lexer)
-		{
-			printf("PWD: %s\n", find_env(tmp, "PWD"));
-			printf("OLDPWD: %s\n", find_env(tmp, "OLDPWD"));
-			tmp->lexer = tmp->lexer->next;
-		}
 	}
 }
 
