@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/19 17:27:38 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/20 13:59:02 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "./libft/libft.h"
+#include <stdio.h>
 
 # define TRUE 0
 # define FALSE 1
@@ -70,24 +71,18 @@ typedef struct s_block
 
 typedef struct s_redirection
 {
-	char *content;
 	int redir_fd;
-	int flags;
+	int stdin;
+	int stdout;
 }	t_redirection;
-
-typedef struct s_file
-{
-	int	inp_fd;
-	int	out_fd;
-	int	*prev_file;
-	int	*next_file;
-}	t_file;
 
 typedef struct s_command // echo test > test.txt | cat wc -l
 {
 	char 				**args;
 	t_redirection		*redirection;
-	t_file				file;
+	int 				stdin;
+	int 				stdout;
+	int 				pipe_fd[2];
 	struct s_command	*next;
 	struct s_command 	*prev;
 } t_command;
@@ -127,6 +122,7 @@ t_env				*ft_lstnew_env(char *str, char *ptr);
 void				ft_lstadd_back_env(t_env **lst, t_env *new);
 int					get_env(char **env, t_mshell *shell);
 void				free_env(t_mshell *shell);
+void	change_env(t_mshell *shell, char *name, char *content);
 
 // lexer
 void 		lexer(t_mshell *shell);
@@ -140,20 +136,22 @@ int check_quotes(const char *before, const char *after);
 char *find_env(t_mshell *shell, char *path);
 char	*ft_strchr_dollar(const char *s);
 
+// execute
+char	*find_path(t_mshell *shell, t_command **command);
+void 	execute(t_mshell *shell);
 
 
 //parser
 //t_ast   	*create_parser_node(t_lexer *lexer);
 //void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
 void		parser(t_mshell *shell);
-void	ft_lstadd_parser(t_command **lst, t_command *new);
+void		ft_lstadd_parser(t_command **lst, t_command *new);
+int 		heredoc_start(t_mshell *shell,t_redirection *redirection,char *delimeter);
+void 		parser_init(t_mshell *shell, t_lexer **lexer);
+void		unquote_the_output(t_lexer *lexer);
 
 //builtin
-void	change_env(t_mshell *shell, char *name, char *content);
 int cd(t_mshell *shell);
-int echo(t_mshell *lexer);
-
-//void		unquote_the_output(t_lexer *lexer);
-
+int echo(t_mshell *shell);
 
 #endif
