@@ -6,20 +6,51 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:58:22 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/20 18:25:02 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:14:39 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 // "_" KONTROLÜ DE OLAN BİR SİLME KONTROLÜ YAPILACAK
 
-int check__unset(t_mshell *shell, char *name)
+#include "../minishell.h"
+
+int check__unset(char *name)
 {
     if (ft_strcmp(name, "_") == 0)
-    {
-        printf("minishell: unset: _: not allowed\n");
         return (1);
-    }
     return (0);
+}
+int unset(t_mshell *shell)
+{
+    t_env *tmp;
+    t_env *prev;
+    char *name;
+
+    if (!shell->command->args || !shell->command->args[1])
+        return (1);
+    name = shell->command->args[1];
+    if (check__unset(name) == 1)
+        return (1);
+    tmp = shell->env;
+    prev = NULL;
+    while (tmp)
+    {
+        if (ft_strcmp(tmp->name, name) == 0)
+        {
+            if (prev)
+                prev->next = tmp->next;
+            else
+                shell->env = tmp->next;
+            free(tmp->name);
+            free(tmp->content);                 // ALOOOOOO BU FREELER NE OLMMMMM!
+            free(tmp);
+            free_malloc(shell->block, tmp);
+            return (1);
+        }
+        prev = tmp;
+        tmp = tmp->next;
+    }
+    return (1);
 }
 
 

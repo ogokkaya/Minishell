@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/21 17:08:41 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/21 17:39:17 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void					ft_lstadd_back_env(t_env **lst, t_env *new);
 int						get_env(char **env, t_mshell *shell);
 void					free_env(t_mshell *shell);
 void					change_env(t_mshell *shell, char *name, char *content);
+void					add_env(t_mshell *shell, char *name, char *content);
 
 // lexer
 void					lexer(t_mshell *shell);
@@ -156,5 +157,7 @@ int						cd(t_mshell *shell);
 int						echo(t_mshell *shell);
 int						pwd(void);
 int						env(t_env *env, t_command *command);
+int						unset(t_mshell *shell);
+int						export(t_mshell *shell);
 
 #endif

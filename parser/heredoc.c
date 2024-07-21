@@ -13,7 +13,7 @@ static void expander_heredoc_env(t_mshell *shell,char **buffer, char *after_doll
     int index;
     
     index = 0;
-     if(after_dollar[0] == '$' && !ft_isalpha(after_dollar[1]))
+     if(after_dollar[0] == '$' && !ft_isalpha(after_dollar[1]) && (after_dollar[1] != '_'))
     {
         *buffer = ft_strjoin(before_dollar, after_dollar + 2);
         if(!*buffer)
@@ -21,7 +21,7 @@ static void expander_heredoc_env(t_mshell *shell,char **buffer, char *after_doll
         return;
     }
     while(after_dollar[index++])
-        if(!ft_isalnum(after_dollar[index]))
+        if(!ft_isalnum_mshell(after_dollar[index]))
             break;
     var_name = ft_substr(after_dollar , 1, --index);
     expand = find_env(shell, var_name);

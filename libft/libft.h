@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 01:18:28 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/04 23:12:11 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/21 19:34:56 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);
 int					ft_isalnum(int c);
+int					ft_isalnum_mshell(int c);
+int					ft_isalpha_and_(int c);
 int					ft_isspace(char *str);
 int					ft_isascii(int c);
 int					ft_isprint(int c);

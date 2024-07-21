@@ -6,7 +6,7 @@
 #    By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/12/11 21:37:52 by ogokkaya          #+#    #+#              #
-#    Updated: 2024/07/04 20:14:04 by onurgokkaya      ###   ########.fr        #
+#    Updated: 2024/07/21 19:35:40 by onurgokkaya      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,10 @@ CFLAGS = -Wall -Wextra -Werror
 
 
 SRC  =  ft_isalpha.c	\
+		ft_isalpha_and_.c\
 		ft_isdigit.c 	\
 	    ft_isalnum.c 	\
+		ft_isalnum_mshell.c\
 	    ft_isascii.c 	\
 	    ft_isprint.c 	\
 	    ft_strlen.c 	\

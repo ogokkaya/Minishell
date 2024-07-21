@@ -40,7 +40,7 @@ int count_char(const char *str, char quote)
     }
     return(quote_count % 2);
 }
-
+ // (before[0] == '\"' && after[ft_strlen(after) - 1] == '\"')
 int check_quotes(const char *before, const char *after)
 {
     int single_quote_before = count_char(before, '\'');
@@ -50,20 +50,21 @@ int check_quotes(const char *before, const char *after)
 
     // Çift tırnakta "$" koşulu için
     if (!double_quote_after && after[1] == '\"')
-        return (printf("1\n"),0);
-    // sadece tek tırnak olduğunda
+        return (0);
+    // Hem tek tırnak hem de çift tırnak yoksa
     else if ((!single_quote_after && !single_quote_before) && (!double_quote_after && !double_quote_before))
         return (1);
+    // Her iki tırnakda olduğunda
+    else if (((single_quote_after && single_quote_before) && (double_quote_after && double_quote_before)) && (before[0] == '\"' && after[ft_strlen(after) - 1] == '\"'))
+        return (1);
+    // sadece tek tırnak olduğunda
     else if((single_quote_before && single_quote_after) && (!double_quote_before && after[ft_strlen(after) - 1] != '\"'))
-        return(printf("2\n"),0);
+        return(0);
     // çift tırnaklar düzgün kapandıysa ve tek tırnak yoksa
     else if ((double_quote_before && double_quote_after) && (!single_quote_after && !single_quote_before))
         return (1);
     // Tek tırnaklarda düzensiz kapanma varsa
     else if ((!single_quote_after && single_quote_before) || (!single_quote_before && single_quote_after))
         return (1);
-    // Hem tek tırnak hem de çift tırnak yoksa
-    else if ((single_quote_after && single_quote_before) && (double_quote_after && double_quote_before))
-        return (1);
-    return (printf("3\n"),0);
+    return (0);
 }
