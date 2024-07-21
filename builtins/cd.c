@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:18:18 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/20 17:48:18 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/20 23:33:09 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int cd(t_mshell *shell)
 {
     char cwd[1024];
     char *pwd;
-    char *oldpwd;
+    //char *oldpwd;
     char *path = NULL;
 
     pwd = find_env(shell, "PWD");
-    oldpwd = find_env(shell, "OLDPWD");
+    //oldpwd = find_env(shell, "OLDPWD");
     if (shell->lexer && shell->lexer->next && ft_strcmp(shell->lexer->content, "cd") == 0)
         path = shell->lexer->next->content;
     else if (_home(shell) == 0)

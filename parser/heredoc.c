@@ -13,7 +13,13 @@ static void expander_heredoc_env(t_mshell *shell,char **buffer, char *after_doll
     int index;
     
     index = 0;
-    // $1USER  ayarlanması lazım hem burda hemde expander da bir de '_' ayarlanıcak
+     if(after_dollar[0] == '$' && !ft_isalpha(after_dollar[1]))
+    {
+        *buffer = ft_strjoin(before_dollar, after_dollar + 2);
+        if(!*buffer)
+            return(perror("dollar_changed"), exit(1));
+        return;
+    }
     while(after_dollar[index++])
         if(!ft_isalnum(after_dollar[index]))
             break;

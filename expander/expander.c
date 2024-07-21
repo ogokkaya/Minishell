@@ -6,13 +6,15 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/19 17:05:02 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/21 17:12:42 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <stdio.h>
 
+// 26. satır $1USER girdisi için yazıldı $1USER girdisi <USER> olarak çıkmalı $12121USER girdisi <2121USER> olarak çıkmalı
+// fonskiyon 25 satırı geçtiğinden dolayı düzenlenmeli
 static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
 {
     char *var_name;
@@ -21,6 +23,13 @@ static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar
     int index;
     
     index = 0;
+    if(after_dollar[0] == '$' && !ft_isalpha(after_dollar[1]))
+    {
+        lexer->content = ft_strjoin(before_dollar, after_dollar + 2);
+        if(!lexer->content)
+            return(perror("dollar_changed"), end_malloc(shell), exit(1) ,FALSE);
+        return(my_malloc(shell->block, lexer->content), TRUE);
+    }
     while(after_dollar[index++])
         if(!ft_isalnum(after_dollar[index]))
             break;
@@ -33,9 +42,9 @@ static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar
     free(dollar_changed);
     if(!lexer->content)
         return(perror("dollar_changed"), FALSE);
-    my_malloc(shell->block, lexer->content);
-    return(TRUE);
+    return(my_malloc(shell->block, lexer->content),TRUE);
 }
+
 static int expand_exit_status(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
 {
     char *status;

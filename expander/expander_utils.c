@@ -25,8 +25,7 @@ int *exit_status(void)
     return(&exit_status);
 }
 
-
-static int count_char(const char *str, char quote)
+int count_char(const char *str, char quote)
 {
     int quote_count;
 
@@ -34,7 +33,9 @@ static int count_char(const char *str, char quote)
     while(*str)
     {
         if(*str == quote)
+        {
             quote_count++;
+        }
         str++;
     }
     return(quote_count % 2);
@@ -42,30 +43,27 @@ static int count_char(const char *str, char quote)
 
 int check_quotes(const char *before, const char *after)
 {
-    int single_qoute_before;
-    int single_qoute_after;
-    int double_qoute_before;
-    int double_qoute_after;
+    int single_quote_before = count_char(before, '\'');
+    int single_quote_after = count_char(after, '\'');
+    int double_quote_before = count_char(before, '\"');
+    int double_quote_after = count_char(after, '\"');
 
-    // echo "'$USER'" koşulu gibi koşullarda direkt sonuc
-    if(before[0] == '\"' && after[ft_strlen(after) - 1] == '\"')
-        return(1);
-    single_qoute_before = count_char(before, '\'');
-    single_qoute_after = count_char(after, '\'');
-    double_qoute_before = count_char(before, '\"');
-    double_qoute_after = count_char(after, '\"');
-
-    // cift tırnakta "$" koşul için
-    if(!double_qoute_after && after[1] == '\"')
+    // Çift tırnakta "$" koşulu için
+    if (!double_quote_after && after[1] == '\"')
+        return (0);
+    // sadece tek tırnak olduğunda
+    else if((single_quote_before && single_quote_after) && (!double_quote_before && after[ft_strlen(after -1)] != '\"'))
         return(0);
-    // sadece cift tırnak
-    else if(double_qoute_before && double_qoute_after && !single_qoute_after && !single_qoute_before)
-        return(1);
-    //tek tırnak düzensiz kapanma koşulunda koydum input controlde kalırsa buna gerek yok
-    else if((!single_qoute_after && single_qoute_before) || (!single_qoute_before && single_qoute_after))
-        return(1);
-    // hem tırnaksızda hem de tırnaksızdan sonra gelen tırnakda $USER"$USER"
-    else if(!single_qoute_after && !single_qoute_before && !double_qoute_after && !double_qoute_before)
-        return(1);
-    return(0);
+    // çift tırnaklar düzgün kapandıysa ve tek tırnak yoksa
+    else if ((double_quote_before && double_quote_after) && (!single_quote_after && !single_quote_before))
+        return (1);
+    // Tek tırnaklarda düzensiz kapanma varsa
+    else if ((!single_quote_after && single_quote_before) || (!single_quote_before && single_quote_after))
+        return (1);
+    // Hem tek tırnak hem de çift tırnak yoksa
+    else if ((!single_quote_after && !single_quote_before) && (!double_quote_after && !double_quote_before))
+        return (1);
+    else if ((single_quote_after && single_quote_before) && (double_quote_after && double_quote_before))
+        return (1);
+    return 0;
 }

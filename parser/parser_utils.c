@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:45:47 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/20 16:24:40 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:07:55 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,18 @@ static char	*remove_quotes_from_content(t_mshell *shell,char *content, char doub
 		return (perror("new_content"), end_malloc(shell), exit(1), NULL);
 	while (i < content_len)
 	{
-		if (content[i] == double_quote)
-			while (content[++i] != double_quote && i < content_len)
-				new_content[j++] = content[i];
-		else if (content[i] == single_quote)
+		if (content[i] == double_quote && !(count_char(&content[i], double_quote)))
+				while (content[++i] != double_quote && i < content_len)
+					new_content[j++] = content[i];
+		else if (content[i] == single_quote && !(count_char(&content[i], single_quote)))
 			while (content[++i] != single_quote && i < content_len)
 				new_content[j++] = content[i];
-		else
+		else if(content[i] != double_quote && content[i] != single_quote)
 			new_content[j++] = content[i++];
+		else
+			i++;
 	}
-	new_content[j] = '\0';
-	return (new_content);
+	return ((new_content[j] = '\0'),new_content);
 }
 
 void	unquote_the_output(t_mshell *shell,t_lexer *lexer)
