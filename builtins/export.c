@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/21 13:15:19 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/21 14:22:04 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 18:03:11 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,17 @@ int input_of_export(t_mshell *shell, t_command *command)
         j = 0;
         while (command->args[i][j] && command->args[i][j] != '=')
             j++;
-        env->name = ft_substr(command->args[i], 0, j);
-        env->content = ft_substr(command->args[i], j + 1, ft_strlen(command->args[i]) - j);
-        if (!name || !content)
-            return (FALSE);
+        name = ft_substr(command->args[i], 0, j);
+        content = ft_substr(command->args[i], j + 1, ft_strlen(command->args[i]) - j);
         
-        if (env->content)
+        printf("name: %s\n", name);
+        printf("content: %s\n", content);
+
+        if (ft_strncmp(shell->env->name, name, ft_strlen(name)) == 0)
         {
             free(env->content);
             env->content = content;
+            printf("declare -x %s=\"%s\"\n", env->name, env->content);
         }
         else
         {

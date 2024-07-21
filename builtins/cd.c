@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:18:18 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/21 11:44:58 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:40:04 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,7 @@ int cd(t_mshell *shell)
 
     pwd = find_env(shell, "PWD");
     oldpwd = find_env(shell, "OLDPWD");
-    if (!pwd || !oldpwd)
-        return (printf("cd: PWD or OLDPWD not set\n"), 1);
-    if (shell->lexer && shell->lexer->next)
+    if (shell->lexer && shell->lexer->next && ft_strcmp(shell->lexer->content, "cd") == 0)
         path = shell->lexer->next->content;
     else if (_home(shell) == 0)
         path = find_env(shell, "HOME");

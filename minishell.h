@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/21 13:37:22 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:39:17 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ void					ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
 void					expander(t_mshell *shell, t_lexer *lexer);
 int						*exit_status(void);
 int						check_quotes(const char *before, const char *after);
+int 					count_char(const char *str, char quote);
 char					*find_env(t_mshell *shell, char *path);
 char					*ft_strchr_dollar(const char *s);
 

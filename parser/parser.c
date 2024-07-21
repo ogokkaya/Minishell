@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/20 16:58:19 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 17:11:09 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <unistd.h>
 
 // echo "jvdfn" "frıfer" bu iki string arasında bir boşluk olmalı
-
+// tırnakların yok edilmesi tekrardan düzenlenildi <denenmesi gerekli>
 static void	file_creation(t_mshell *shell, t_redirection *redirection,
 		t_lexer **lexer)
 {
