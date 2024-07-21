@@ -52,7 +52,7 @@ int check_quotes(const char *before, const char *after)
     if (!double_quote_after && after[1] == '\"')
         return (0);
     // sadece tek tırnak olduğunda
-    else if((single_quote_before && single_quote_after) && (!double_quote_before && after[ft_strlen(after -1)] != '\"'))
+    else if((single_quote_before && single_quote_after) && (!double_quote_before && after[ft_strlen(after) - 1] != '\"'))
         return(0);
     // çift tırnaklar düzgün kapandıysa ve tek tırnak yoksa
     else if ((double_quote_before && double_quote_after) && (!single_quote_after && !single_quote_before))
