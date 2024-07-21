@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 16:22:49 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/16 16:49:22 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 13:39:09 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,14 @@ void	change_env(t_mshell *shell, char *name, char *content)
 		}
 		tmp = tmp->next;
 	}
+}
+
+void add_export(t_mshell *shell, char *name, char *content)
+{
+	t_env *new_env;
+
+	new_env = ft_lstnew_env(name, content);
+	if(!new_env)
+		return;
+	ft_lstadd_back_env(&shell->env, new_env);
 }

@@ -13,11 +13,11 @@ void	builtin_start(t_mshell *shell, t_command *command)
 		pwd();
 	else if (ft_strcmp(command->args[0], "cd") == 0)
 		cd(shell);
-	/*  else if(ft_strcmp(command->args[0], "unset") == 0)
-			unset();
+	 else if(ft_strcmp(command->args[0], "unset") == 0)
+			unset(shell);
 		else if(ft_strcmp(command->args[0], "export") == 0)
-			export();
-		else if(ft_strcmp(command->args[0], "exit") == 0)
+			export(shell);
+		/* else if(ft_strcmp(command->args[0], "exit") == 0)
 			exit(); */
 }
 
