@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:46:58 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 00:48:44 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/21 17:46:42 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,8 @@ void	ft_lstdelone_memory(t_block *lst, void (*del)(void *))
 {
 	if (!lst)
 		return ;
-	del(lst->allocate);
+	if(lst->allocate)
+		del(lst->allocate);
 	free(lst);
 }
 

@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/21 17:31:56 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/21 19:14:55 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static int expand_exit_status(t_mshell *shell,t_lexer *lexer, char *before_dolla
     if(!changed_input)
         return(perror("changed_input"), FALSE);
     lexer->content = ft_strjoin(before_dollar, changed_input);
+    printf("%s\n", lexer->content);
     if(!lexer->content)
         return(perror("lexer->content"), FALSE);
     my_malloc(shell->block, lexer->content);

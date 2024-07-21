@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/20 17:30:40 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 18:00:30 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,15 @@ int	shell_start_init(char **env, t_mshell *shell)
 		return (printf(MALLOC), FALSE);
 	return (TRUE);
 }
+
+int	shell_start(t_mshell *shell)
+{
+	shell->lexer = NULL;
+	shell->command = NULL;
+	shell->block = malloc_starter();
+	return (TRUE);
+}
+
 
 void	read_line_cycle(t_mshell *shell)
 {
@@ -50,17 +59,28 @@ void	read_line_cycle(t_mshell *shell)
 	add_history(shell->input);
 }
 
+void	end_malloc_loop(t_mshell *shell)
+{
+	// rl_clear_history bu kısıma da eklenebilir
+	ft_lstclear_memory(&shell->block, free);
+}
+
 int	loop_shell(t_mshell *shell)
 {
+	t_mshell *shell_clone;
+
+	shell_clone = shell;
 	while (1)
 	{
 		read_line_cycle(shell);
 		lexer(shell);
 		parser(shell);
 		execute(shell);
-		free(shell->lexer);
-		shell->lexer = NULL;
+		end_malloc_loop(shell_clone);
+		if (shell_start(shell) == FALSE)
+			return (end_malloc(shell), FALSE);
 	}
+	return(TRUE);
 }
 
 int	main(int ac, char **av, char **env)
