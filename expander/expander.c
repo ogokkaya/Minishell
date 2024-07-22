@@ -6,13 +6,23 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/21 23:39:25 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/22 17:40:50 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <stdio.h>
 
+
+void expander_free(void  *address, void *address_1, void *address_2)
+{
+    if(address)
+        free(address);
+    if(address_1)
+        free(address_1);
+    if(address_2)
+        free(address_2);
+}
 // 26. satır $1USER girdisi için yazıldı $1USER girdisi <USER> olarak çıkmalı $12121USER girdisi <2121USER> olarak çıkmalı
 // fonskiyon 25 satırı geçtiğinden dolayı düzenlenmeli
 static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
@@ -37,9 +47,7 @@ static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar
     expand = find_env(shell, var_name);
     dollar_changed = ft_strjoin(expand, &after_dollar[++index]);
     lexer->content = ft_strjoin(before_dollar, dollar_changed);
-    free(var_name);
-    free(expand);
-    free(dollar_changed);
+    expander_free(var_name, expand, dollar_changed);
     if(!lexer->content)
         return(perror("dollar_changed"), FALSE);
     return(my_malloc(shell->block, lexer->content),TRUE);
@@ -120,7 +128,7 @@ char	*ft_strchr_dollar(const char *s)
     {
         if(s[i] == '$' && s[i + 1] &&s[i + 1] == '$')
             i++;
-        else if(s[i] == '$' && s[i + 1] && !ft_isalnum_mshell(s[i + 1]))
+        else if(s[i] == '$' && s[i + 1] && !ft_isalnum_mshell(s[i + 1]) && s[i + 1] != '?')
             i++;
         else if(s[i] == '$' && s[i + 1] != '$')
             break;
