@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <unistd.h>
 
 void	builtin_start(t_mshell *shell, t_command *command)
 {
@@ -44,29 +45,35 @@ int	builtin_control(char *command)
 
 int	pipe_check(t_command **command)
 {
-	if ((*command)->prev || (*command)->next
-		|| (builtin_control((*command)->args[0]) == FALSE))
+	if (((*command)->prev || (*command)->next) && (builtin_control((*command)->args[0]) == FALSE))
 		return (TRUE);
 	return (FALSE);
 }
 
 void	execve_start(t_mshell *shell, t_command *command)
 {
-	char	*path;
+	//char	*path;
 
-	path = find_path(shell, &command);
-	printf("%s\n", path);
+	find_path(shell, &command);
 }
 
-static int	executive(t_mshell *shell, t_command *command)
 // receive a single pointer
+// açılmış olan diğer dosya fd lerinin nerde kapanacağı ayarlanıcak
+// open_file da kapanmış da olabilir kontrol edilecek
+static int	executive(t_mshell *shell, t_command *command)
 {
 	if (command->args[0])
-		if (builtin_control(command->args[0]) == TRUE)
+	{
+			if (builtin_control(command->args[0]) == TRUE)
+		{
 			builtin_start(shell, command);
-	// if(pipe_check(&command) == TRUE)
-	// execve_start(shell, command);
-	(void)shell;
+		}
+	}
+	if(pipe_check(&command) == TRUE)
+		execve_start(shell, command);
+	if((builtin_control(command->args[0]) == FALSE) && !(command->next || command->prev))
+		perror_write(*command->args, CNF);
+	save_restore_fd(STDIN_FILENO, STDOUT_FILENO, 1);
 	return (0);
 }
 

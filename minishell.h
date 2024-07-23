@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/21 17:39:17 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/23 02:18:51 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 // ERROR
 # define MALLOC "Error\nCould not allocate memory\n"
 # define ARG "Error\nThe program can only run without arguments\n"
+#define NSFD "No such file or directory\n"
+#define CNF "command not found\n"
 
 typedef enum s_token_type
 {
@@ -71,17 +73,17 @@ typedef struct s_block
 
 typedef struct s_redirection
 {
-	int					redir_fd;
-	int					stdin;
-	int					stdout;
+	int						redir_fd;
+	int						r_stdin;
+	int						r_stdout;
+	struct s_redirection	*next;
+	struct s_redirection	*prev;
 }						t_redirection;
 
 typedef struct s_command // echo test > test.txt | cat wc -l
 {
 	char **args;
 	t_redirection *redirection;
-	int stdin;
-	int stdout;
 	int pipe_fd[2];
 	struct s_command *next;
 	struct s_command *prev;
@@ -122,7 +124,7 @@ void					ft_lstadd_back_env(t_env **lst, t_env *new);
 int						get_env(char **env, t_mshell *shell);
 void					free_env(t_mshell *shell);
 void					change_env(t_mshell *shell, char *name, char *content);
-void					add_env(t_mshell *shell, char *name, char *content);
+//void					add_env(t_mshell *shell, char *name, char *content);
 
 // lexer
 void					lexer(t_mshell *shell);
@@ -132,6 +134,7 @@ void					ft_lstadd_back_lexer(t_lexer **lst, t_lexer *new);
 
 // expander
 void					expander(t_mshell *shell, t_lexer *lexer);
+void 					expander_free(void  *address, void *address_1, void *address_2);
 int						*exit_status(void);
 int						check_quotes(const char *before, const char *after);
 int 					count_char(const char *str, char quote);
@@ -141,14 +144,14 @@ char					*ft_strchr_dollar(const char *s);
 // execute
 char					*find_path(t_mshell *shell, t_command **command);
 void					execute(t_mshell *shell);
+void 					perror_write(char *content, char *perror);
+void					save_restore_fd(int std_in, int std_out, int mode);
 
 // parser
 // t_ast   	*create_parser_node(t_lexer *lexer);
 // void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
 void					parser(t_mshell *shell);
-void					ft_lstadd_parser(t_command **lst, t_command *new);
-int						heredoc_start(t_mshell *shell,
-							t_redirection *redirection, char *delimeter);
+int						heredoc_start(t_mshell *shell, char *delimeter);
 void					parser_init(t_mshell *shell, t_lexer **lexer);
 void					unquote_the_output(t_mshell *shell, t_lexer *lexer);
 
