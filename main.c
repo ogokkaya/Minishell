@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/21 19:24:04 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/23 02:49:09 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ void	end_malloc_loop(t_mshell *shell)
 	ft_lstclear_memory(&shell->block, free);
 }
 
+// input olarak sadece '<<' girilirse syntax error vermeli
 int	loop_shell(t_mshell *shell)
 {
 	t_mshell *shell_clone;

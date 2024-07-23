@@ -6,11 +6,13 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:45:47 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/21 17:07:55 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/23 03:11:27 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include "open_file.h"
+#include <unistd.h>
 #include <stdio.h>
 
 static char	*remove_quotes_from_content(t_mshell *shell,char *content, char double_quote,
@@ -43,6 +45,25 @@ static char	*remove_quotes_from_content(t_mshell *shell,char *content, char doub
 	return ((new_content[j] = '\0'),new_content);
 }
 
+int open_file(char *file_name, int flags)
+{
+	int fd;
+	int dup_fd;
+
+	fd = open(file_name, flags, 0777);
+	if(fd == -1)
+		return(perror_write(file_name, NSFD), 0);
+	if(flags == REDIR_IN)
+		dup_fd = dup2(fd , STDIN_FILENO);
+	else
+		dup_fd = dup2(fd , STDOUT_FILENO);
+	close(fd);
+	if(dup_fd == -1)
+		perror(file_name);
+	return(fd);
+}
+
+
 void	unquote_the_output(t_mshell *shell,t_lexer *lexer)
 {
 	char	*lexer_content_trim;
@@ -50,12 +71,54 @@ void	unquote_the_output(t_mshell *shell,t_lexer *lexer)
 	lexer_content_trim = remove_quotes_from_content(shell,lexer->content, '\"', '\'');
 	lexer->content = lexer_content_trim;
 }
+static void	ft_lstadd_parser(t_command **lst, t_command *new)
+{
+	t_command	*ptr;
+
+	if (*lst == NULL)
+	{
+		*lst = new;
+		new->prev = NULL;
+	}
+	else
+	{
+		ptr = *lst;
+		while (ptr->next != NULL)
+			ptr = ptr->next;
+		ptr->next = new;
+		new->prev = ptr;
+	}
+	new->next = NULL;
+}
+
+static void	ft_lstadd_redirection(t_redirection **lst, t_redirection *new)
+{
+	t_redirection	*ptr;
+
+	if (*lst == NULL)
+	{
+		*lst = new;
+		new->r_stdin = STDIN_FILENO;
+		new->r_stdout = STDOUT_FILENO;
+		new->prev = NULL;
+	}
+	else
+	{
+		ptr = *lst;
+		while (ptr->next != NULL)
+			ptr = ptr->next;
+		ptr->next = new;
+		new->r_stdin = STDIN_FILENO;
+		new->r_stdout = STDOUT_FILENO;
+		new->prev = ptr;
+	}
+	new->next = NULL;
+}
 
 static void	count_arg_for_parser(t_lexer **lexer, int *redir_count,
 		int *arg_count)
 {
-	while ((*lexer)->next != NULL && (*lexer)->type != TOKEN_PIPE
-		&& (*lexer)->type != TOKEN_HEREDOC)
+	while ((*lexer)->next != NULL && (*lexer)->type != TOKEN_PIPE)
 	{
 		if ((*lexer)->type == TOKEN_WORD)
 			*arg_count += 1;
@@ -64,8 +127,7 @@ static void	count_arg_for_parser(t_lexer **lexer, int *redir_count,
 		(*lexer) = (*lexer)->next;
 	}
 	// heredoc düşünülecek
-	if ((*lexer) && (*lexer)->type != TOKEN_PIPE
-		&& (*lexer)->type != TOKEN_HEREDOC)
+	if ((*lexer) && (*lexer)->type != TOKEN_PIPE)
 	{
 		if ((*lexer)->type == TOKEN_WORD)
 			*arg_count += 1;
@@ -96,24 +158,5 @@ void	parser_init(t_mshell *shell, t_lexer **lexer)
 		return (perror("command->redirection"), end_malloc(shell), exit(1));
 	my_malloc(shell->block, command->redirection);
 	ft_lstadd_parser(&shell->command, command);
-}
-
-void	ft_lstadd_parser(t_command **lst, t_command *new)
-{
-	t_command	*ptr;
-
-	if (*lst == NULL)
-	{
-		*lst = new;
-		new->prev = NULL;
-	}
-	else
-	{
-		ptr = *lst;
-		while (ptr->next != NULL)
-			ptr = ptr->next;
-		ptr->next = new;
-		new->prev = ptr;
-	}
-	new->next = NULL;
+	ft_lstadd_redirection(&shell->command->redirection, command->redirection);
 }

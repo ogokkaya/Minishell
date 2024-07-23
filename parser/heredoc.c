@@ -27,9 +27,7 @@ static void expander_heredoc_env(t_mshell *shell,char **buffer, char *after_doll
     expand = find_env(shell, var_name);
     dollar_changed = ft_strjoin(expand, &after_dollar[++index]);
     *buffer = ft_strjoin(before_dollar, dollar_changed);
-    free(var_name);
-    free(expand);
-    free(dollar_changed);
+    expander_free(var_name, expand, dollar_changed);
     if(!*buffer)
         return(perror("dollar_changed"),exit(1));
 }
@@ -75,10 +73,11 @@ void write_to_pipe(t_mshell *shell ,char *delimeter, int writig_tip)
     // leak durumları düşünülmeli
 }
 
-int heredoc_start(t_mshell *shell,t_redirection *redirection,char *delimeter)
+int heredoc_start(t_mshell *shell,char *delimeter)
 {
     int exit_status;
     int pid;
+    int dup_fd;
     int pipe_fd[2];
 
     pipe(pipe_fd);
@@ -96,7 +95,9 @@ int heredoc_start(t_mshell *shell,t_redirection *redirection,char *delimeter)
     exit_status >>= 8;
     if(exit_status != 0)
         return(close(pipe_fd[0]),-1);
-    redirection->redir_fd = pipe_fd[0];
+    dup_fd = dup2(pipe_fd[0], STDIN_FILENO);
+    if(dup_fd == -1)
+        return(perror("heredoc dup"), 1);
     // bu kısıma bakılacak şimdilik 0 da kalıyo bu kısım istenilen fd ye bağlanıcak
     // signal ayarlanıcak
     return (0);

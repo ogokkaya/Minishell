@@ -66,10 +66,9 @@ char	*find_path(t_mshell *shell, t_command **command)
 	free(sub);
 	find_path = cmd_and_path(*cmd1, path);
 	free_str(path);
-	free_str(cmd1);
 	if (!find_path)
 	{
-		ft_putstr_fd("Access: There is no way\n", 2);
+		perror_write(*(*command)->args, NSFD);
 		return (NULL);
 	}
 	return (find_path);
