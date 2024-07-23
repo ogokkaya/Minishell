@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 16:18:18 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/21 19:24:52 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/22 12:58:54 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 int _home(t_mshell *shell)
 {
     char *home = find_env(shell, "HOME");
-    if (!home)
+    printf("HOME: %s\n", home);
+    if (ft_strcmp(home, "") == 0)
         return (printf("cd: HOME not set\n"), 1);
     if (chdir(home) == -1)
         return (printf("cd: %s: No such file or directory\n", home), 1);
@@ -30,11 +31,9 @@ int cd(t_mshell *shell)
 {
     char cwd[1024];
     char *pwd;
-    //char *oldpwd;
     char *path = NULL;
 
     pwd = find_env(shell, "PWD");
-    //oldpwd = find_env(shell, "OLDPWD");
     if (shell->lexer && shell->lexer->next && ft_strcmp(shell->lexer->content, "cd") == 0)
         path = shell->lexer->next->content;
     else if (_home(shell) == 0)

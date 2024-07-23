@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/21 17:39:17 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/22 17:29:21 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,5 +159,8 @@ int						pwd(void);
 int						env(t_env *env, t_command *command);
 int						unset(t_mshell *shell);
 int						export(t_mshell *shell);
-
+void					if_exist(t_env *env, char *content);
+void					if_not_exist(t_mshell *shell, t_env *env, char *name, char *content);
+int						id_validation(char *name, char *content ,int equal);
+int						is_equal(char c);
 #endif

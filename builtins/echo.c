@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 12:26:09 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/20 18:23:19 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/21 18:20:17 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,3 +64,9 @@ int echo(t_mshell *shell)
     echo_put(command, 1);
     return (TRUE);
 }
+
+/* bash-3.2$ echo $asd_asdasd
+
+bash-3.2$ ./minishell                           a bu duzelcek
+minishell$ echo $asdasd_asdasd
+_asdasd */

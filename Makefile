@@ -3,7 +3,7 @@ LIBFT = libft
 LIBFTA = libft/libft.a
 MINISHELLA = minishell.h
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g #-fsanitize=address
 CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		env/env_utils.c env/get_env.c \
 		expander/expander.c expander/expander_utils.c lexer/lexer.c lexer/lexer_utils.c error_handling/error_handler.c \
@@ -11,6 +11,7 @@ CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		parser/parser.c parser/parser_utils.c parser/heredoc.c \
 		execute/execute.c execute/execute_path.c \
 		builtins/cd.c builtins/echo.c builtins/pwd.c builtins/env.c builtins/unset.c builtins/export.c\
+		builtins/export_utils.c
 
 
 		
