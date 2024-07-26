@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/02 13:53:37 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/19 14:28:50 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/25 23:42:53 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,13 @@ static int	get_next_token_length(char *input)
 	return (i);
 }
 
-static t_token_type determine_token_type(char *token)
+static t_token_type determine_token_type(char *token, t_mshell *shell)
 {
 	if(ft_strncmp(token, "<<", 2) == 0)
+	{
+		shell->pipe_count += 1;
 		return(TOKEN_HEREDOC);
+	}
 	if(ft_strncmp(token, ">>", 2) == 0)
 		return(TOKEN_REDIR_APPEND);
 	if(ft_strncmp(token, "<", 1) == 0)
@@ -58,7 +61,10 @@ static t_token_type determine_token_type(char *token)
 	if(ft_strncmp(token, ">", 1) == 0)
 		return(TOKEN_REDIR_OUT);
 	if(ft_strcmp(token, "|") == 0)
+	{
+		shell->pipe_count += 1;
 		return(TOKEN_PIPE);
+	}
 	return(TOKEN_WORD);
 }
 
@@ -75,7 +81,7 @@ static void	parse_command_tokens(char *input, t_mshell *shell)
 		content = ft_substr(input, 0, len);
 		if (!content)
 			return (perror(content), free(input),end_malloc(shell), exit(1));
-		type = determine_token_type(content);
+		type = determine_token_type(content, shell);
 		ft_lstadd_back_lexer(&shell->lexer, ft_lstnew_lexer(shell,
 				content, type));
 		next_input_tmp = ft_strtrim(input + len, " ");

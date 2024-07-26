@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/22 17:40:50 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/23 21:55:23 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,6 @@ char	*ft_strchr_dollar(const char *s)
 	return (NULL);
 }
 
-// $$USER$$$HOME
 void expander(t_mshell *shell, t_lexer *lexer)
 {
     char *before_dollar;

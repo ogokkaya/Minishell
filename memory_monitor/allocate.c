@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   allocate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:49:42 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/04 00:06:57 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/25 12:35:34 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,19 @@ t_block	*malloc_starter(void)
 void	*my_malloc(t_block *block, void *address)
 {
 	t_block	*new_block;
-
-	if (block == NULL)
-		return (NULL);
-	new_block = ft_lstnew_memory(address);
-	if (new_block != NULL)
+	
+	if (address != NULL)
 	{
-		ft_lstadd_back_memory(&block, new_block);
-		return (TRUE);
+		if (block == NULL)
+			return (NULL);
+		new_block = ft_lstnew_memory(address);
+		if (new_block != NULL)
+		{
+			ft_lstadd_back_memory(&block, new_block);
+			return (TRUE);
+		}
 	}
-	return (printf(MALLOC), NULL);
+	return (free(address), printf(MALLOC), NULL);
 }
 
 // Free's the malloced memory node

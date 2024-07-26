@@ -16,18 +16,6 @@ static void	free_str(char **str)
 	free(str);
 }
 
-static char	*path_env(t_env *env)
-{
-	char	*sub;
-
-	while (env != NULL && ft_strncmp(env->name, "PATH", 4))
-        env = env->next;
-	sub = ft_substr(env->content, 0, ft_strlen(env->content));
-	if (!sub)
-		return (NULL);
-	return (sub);
-}
-
 static char	*cmd_and_path(char *cmd, char **path)
 {
 	char	*sub;
@@ -57,7 +45,7 @@ char	*find_path(t_mshell *shell, t_command **command)
 	char	**cmd1;
 
 	cmd1 = (*command)->args;
-	sub = path_env(shell->env);
+	sub = find_env(shell , "PATH");
 	if (!sub)
 		return (free(cmd1), NULL);
 	path = ft_split(sub, ':');

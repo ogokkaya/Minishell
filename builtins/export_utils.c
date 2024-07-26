@@ -6,19 +6,24 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 15:29:15 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/22 17:52:31 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/26 17:18:04 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void if_exist(t_env *env, char *content)
+/* t_env   *tmp_start_env(void)
 {
-    free(env->content);
-    env->content = content;
-    if (env->content)
-        printf("declare -x %s=\"%s\"\n", env->name, env->content);
-}
+    t_env *env;
+
+    env = malloc(sizeof(t_env));
+    if (!env)
+        return (NULL);
+    env->name = NULL;
+    env->content = NULL;
+    env->next = NULL;
+    return (env);
+} */
 
 void if_not_exist(t_mshell *shell, t_env *env, char *name, char *content)
 {
@@ -27,29 +32,24 @@ void if_not_exist(t_mshell *shell, t_env *env, char *name, char *content)
         return ;
     ft_lstadd_back_env(&shell->env, env);
 }
-int id_validation(char *name, char *content ,int equal)
+
+int id_validation(char *command)
 {
     int i;
 
     i = 0;
-        printf("%d\n", equal);
-    if (ft_isalpha(name[i]) == 0 && name[i] != '_')
-        return (printf("export: `%s': not a valid identifier\n",name),FALSE);
+    if (ft_isalpha(command[i]) == 0 && command[i] != '_')
+        return (printf("export: `%s': not a valid identifier\n",command),
+            *exit_status() = 1, FALSE);
     i++;
-    while (name[i])
+    while (command[i] && command[i] != '=')
     {
-        if (ft_isalnum(name[i]) == 0 && name[i] != '_' && equal == 1)
-            return (printf("export: `%s=%s': not a valid identifier\n", name, content),FALSE);
-        else if (ft_isalnum(name[i]) == 0 && name[i] != '_' && equal == 0)
-            return (printf("export: `%s': not a valid identifier\n", name),FALSE);
+        if (ft_isalnum(command[i]) == 0 && command[i] != '_' && command[i] != '=')
+        {
+                printf("export: `%s': not a valid identifier\n", command);
+            return (*exit_status() = 127 ,FALSE);
+        }
         i++;
     }
     return (TRUE);
-}
-
-int is_equal(char c)
-{
-    if (c == '=')
-        return (TRUE);
-    return (FALSE);
 }

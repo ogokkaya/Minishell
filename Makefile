@@ -11,7 +11,7 @@ CFILES = main.c memory_monitor/allocate.c  memory_monitor/memory_utils.c \
 		parser/parser.c parser/parser_utils.c parser/heredoc.c \
 		execute/execute.c execute/execute_path.c execute/execute_utils.c\
 		builtins/cd.c builtins/echo.c builtins/pwd.c builtins/env.c builtins/unset.c builtins/export.c\
-		builtins/export_utils.c
+		builtins/export_utils.c builtins/export_utils_extra.c builtins/exit.c
 
 
 		

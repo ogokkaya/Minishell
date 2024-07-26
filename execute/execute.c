@@ -15,11 +15,11 @@ void	builtin_start(t_mshell *shell, t_command *command)
 	else if (ft_strcmp(command->args[0], "cd") == 0)
 		cd(command, shell);
 	 else if(ft_strcmp(command->args[0], "unset") == 0)
-			unset(shell);
+			unset(shell->env, command);
 		else if(ft_strcmp(command->args[0], "export") == 0)
 			export(shell);
-		/* else if(ft_strcmp(command->args[0], "exit") == 0)
-			exit(); */
+/* 		else if(ft_strcmp(command->args[0], "exit") == 0)
+			amexit(); */
 }
 
 int	builtin_control(char *command)
@@ -43,24 +43,78 @@ int	builtin_control(char *command)
 	return (FALSE);
 }
 
+static void parent_pipe_update(t_pipe *node, t_command *command) 
+{
+    if (node && node->prev && command->prev)
+	{
+		printf("9\n");
+        close(node->prev->fd[0]);
+        close(node->prev->fd[1]);
+    }
+	if (node && !command->next)
+	{
+        close(node->fd[0]);
+        close(node->fd[1]);
+    }
+}
+
 int	pipe_check(t_command **command)
 {
-	if (((*command)->prev || (*command)->next) && (builtin_control((*command)->args[0]) == FALSE))
+	if (((*command)->prev || (*command)->next) || (builtin_control((*command)->args[0]) == FALSE))
 		return (TRUE);
+	/* else if(builtin_control((*command)->args[0]) == FALSE)
+		just_one_cmd() */
 	return (FALSE);
 }
 
-void	execve_start(t_mshell *shell, t_command *command)
+void	execve_start(t_mshell *shell, t_command *command, t_pipe *node,char **env)
 {
-	//char	*path;
+	char	*path;
+	int pid;
 
-	find_path(shell, &command);
+	path = find_path(shell, &command);
+	//check_path
+	pid = fork();
+	if(pid == -1)
+		perror("fork");
+	if (pid == 0) 
+	{
+		 if (node && node->prev && node->index > 0)
+        {
+			printf("1\n");
+			link_read_end(node->prev);
+		}
+        else if (node && node->next && node->index < shell->pipe_count - 1)
+        {
+			printf("4\n");
+			link_write_end(node->next);
+		}
+		else if(node && !node->prev && !node->next && command->next && !command->prev)
+		{
+			printf("2\n");
+			close(node->fd[0]);
+			dup2(node->fd[1], STDOUT_FILENO);
+			close(node->fd[1]);
+		}
+		else if(node && !node->prev && !node->next && command->prev && !command->next)
+		{
+			printf("3\n");
+			close(node->fd[1]);
+			dup2(node->fd[0], STDIN_FILENO);
+			close(node->fd[0]);
+		}
+        execve(path, command->args, env);
+        exit(0);
+    }
+	parent_pipe_update(node, command);
+	waitpid(-1, NULL, 0);
 }
+
 
 // receive a single pointer
 // açılmış olan diğer dosya fd lerinin nerde kapanacağı ayarlanıcak
 // open_file da kapanmış da olabilir kontrol edilecek
-static int	executive(t_mshell *shell, t_command *command)
+static int	executive(t_mshell *shell, t_command *command, t_pipe *node,char **env)
 {
 	if (command->args[0])
 	{
@@ -70,21 +124,25 @@ static int	executive(t_mshell *shell, t_command *command)
 		}
 	}
 	if(pipe_check(&command) == TRUE)
-		execve_start(shell, command);
-	if((builtin_control(command->args[0]) == FALSE) && !(command->next || command->prev))
-		perror_write(*command->args, CNF);
+		execve_start(shell, command, node ,env);
 	save_restore_fd(STDIN_FILENO, STDOUT_FILENO, 1);
 	return (0);
 }
 
-void	execute(t_mshell *shell)
+// command freelenicek
+void	execute(t_mshell *shell, char **env)
 {
 	t_command *command;
+	int index;
 
 	command = shell->command;
+	index = 0;
 	while (command != NULL)
 	{
-		executive(shell, command); // pass command directly
+		executive(shell, command, shell->pipe ,env); // pass command directly
 		command = command->next;
+		if(index % 2 == 0 && shell->pipe && shell->pipe->next != NULL)
+			shell->pipe = shell->pipe->next;
 	}
+
 }
