@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/05 15:47:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/23 03:18:13 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/26 01:51:03 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,10 @@ static void	file_creation(t_mshell *shell, t_redirection *redirection,
 void	redirection(t_mshell *shell, t_command **command, t_lexer **lexer)
 {
     if ((*lexer)->type == TOKEN_HEREDOC && (*lexer)->next != NULL)
-    {
-        (*lexer) = (*lexer)->next;
-        heredoc_start(shell ,(*lexer)->content);
-    }
+		(*lexer) = (*lexer)->next;
     else
         file_creation(shell ,(*command)->redirection, &(*lexer));
-    if((*command)->redirection->next)
+    if((*command)->redirection && (*command)->redirection->next)
 		(*command)->redirection = (*command)->redirection->next;
 }
 
@@ -71,7 +68,6 @@ void	parser_start(t_mshell *shell, t_command *command, t_lexer *lexer)
 		if (lexer->type == TOKEN_PIPE)
 		{
 			index = 0;
-			pipe(command->pipe_fd);
 			command = command->next;
 		}
 		if (lexer->type != TOKEN_WORD && lexer->type != TOKEN_PIPE)
@@ -91,6 +87,9 @@ void	parser(t_mshell *shell)
 		parser_init(shell, &lexer);
 		lexer = lexer->next;
 	}
+	lexer = shell->lexer;
 	save_restore_fd(STDIN_FILENO, STDOUT_FILENO, 0);
-	parser_start(shell, shell->command, shell->lexer);
+	pipe_create(shell);
+	parser_heredoc_start(shell, lexer, shell->pipe);
+	parser_start(shell, shell->command, lexer);
 }

@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/23 02:49:09 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/25 23:43:18 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	shell_start_init(char **env, t_mshell *shell)
 	shell->env = NULL;
 	shell->lexer = NULL;
 	shell->command = NULL;
+	shell->pipe = NULL;
+	shell->pipe_count = 0;
 	shell->block = malloc_starter();
 	if (get_env(env, shell) == FALSE)
 		return (printf(MALLOC), FALSE);
@@ -30,6 +32,8 @@ int	shell_start(t_mshell *shell)
 {
 	shell->lexer = NULL;
 	shell->command = NULL;
+	shell->pipe = NULL;
+	shell->pipe_count = 0;
 	shell->block = malloc_starter();
 	return (TRUE);
 }
@@ -66,7 +70,9 @@ void	end_malloc_loop(t_mshell *shell)
 }
 
 // input olarak sadece '<<' girilirse syntax error vermeli
-int	loop_shell(t_mshell *shell)
+// echo onur > syntax error vermeli
+// echo -nnnnnnnnneffwefwnn onur hatalı 
+int	loop_shell(t_mshell *shell, char **env)
 {
 	t_mshell *shell_clone;
 
@@ -76,7 +82,8 @@ int	loop_shell(t_mshell *shell)
 		read_line_cycle(shell);
 		lexer(shell);
 		parser(shell);
-		execute(shell);
+		execute(shell, env);
+		shell_clone = shell;
 		end_malloc_loop(shell_clone);
 		if (shell_start(shell) == FALSE)
 			return (end_malloc(shell), FALSE);
@@ -93,7 +100,7 @@ int	main(int ac, char **av, char **env)
 		return (printf(ARG), FALSE);
 	if (shell_start_init(env, &shell) == FALSE)
 		return (end_malloc(&shell), FALSE);
-	if (loop_shell(&shell) == FALSE)
+	if (loop_shell(&shell, env) == FALSE)
 		return (end_malloc(&shell), FALSE);
 	return (TRUE);
 }

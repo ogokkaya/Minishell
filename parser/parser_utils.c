@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 16:45:47 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/23 03:11:27 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/25 16:28:11 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,6 @@ static void	ft_lstadd_redirection(t_redirection **lst, t_redirection *new)
 	if (*lst == NULL)
 	{
 		*lst = new;
-		new->r_stdin = STDIN_FILENO;
-		new->r_stdout = STDOUT_FILENO;
 		new->prev = NULL;
 	}
 	else
@@ -108,12 +106,11 @@ static void	ft_lstadd_redirection(t_redirection **lst, t_redirection *new)
 		while (ptr->next != NULL)
 			ptr = ptr->next;
 		ptr->next = new;
-		new->r_stdin = STDIN_FILENO;
-		new->r_stdout = STDOUT_FILENO;
 		new->prev = ptr;
 	}
 	new->next = NULL;
 }
+
 
 static void	count_arg_for_parser(t_lexer **lexer, int *redir_count,
 		int *arg_count)
@@ -126,7 +123,6 @@ static void	count_arg_for_parser(t_lexer **lexer, int *redir_count,
 			*redir_count += 1;
 		(*lexer) = (*lexer)->next;
 	}
-	// heredoc düşünülecek
 	if ((*lexer) && (*lexer)->type != TOKEN_PIPE)
 	{
 		if ((*lexer)->type == TOKEN_WORD)
@@ -136,6 +132,7 @@ static void	count_arg_for_parser(t_lexer **lexer, int *redir_count,
 	}
 }
 
+// bu fonksiyondan kaynaklı leak var
 void	parser_init(t_mshell *shell, t_lexer **lexer)
 {
 	t_command	*command;

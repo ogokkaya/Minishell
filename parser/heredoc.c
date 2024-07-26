@@ -63,7 +63,6 @@ void write_to_pipe(t_mshell *shell ,char *delimeter, int writig_tip)
             buffer = ft_strdup("\n");
         else
             expander_heredoc(shell ,&buffer);
-        printf("%s\n", buffer);
         ft_putstr_fd(buffer, writig_tip);
         ft_putstr_fd("\n", writig_tip);
         if(buffer)
@@ -73,32 +72,230 @@ void write_to_pipe(t_mshell *shell ,char *delimeter, int writig_tip)
     // leak durumları düşünülmeli
 }
 
-int heredoc_start(t_mshell *shell,char *delimeter)
+// düzenlenicek
+/* int heredoc_start(t_mshell *shell, char *delimiter,t_pipe *node) 
 {
     int exit_status;
     int pid;
-    int dup_fd;
-    int pipe_fd[2];
-
-    pipe(pipe_fd);
     pid = fork();
-    if(pid == -1)
-        return(-1);
-    if(pid == 0)
-    {
-        close(pipe_fd[0]);
-        write_to_pipe(shell ,delimeter, pipe_fd[1]);
-        exit(0);
+    if (pid == -1) {
+        perror("fork");
+        return -1;
     }
-    close(pipe_fd[1]);
-    waitpid(pid , &exit_status, 0);
-    exit_status >>= 8;
-    if(exit_status != 0)
-        return(close(pipe_fd[0]),-1);
-    dup_fd = dup2(pipe_fd[0], STDIN_FILENO);
-    if(dup_fd == -1)
-        return(perror("heredoc dup"), 1);
-    // bu kısıma bakılacak şimdilik 0 da kalıyo bu kısım istenilen fd ye bağlanıcak
-    // signal ayarlanıcak
-    return (0);
+    if (pid == 0) { // Child process
+        close(node->fd[0]); // Close read end
+        write_to_pipe(shell, delimiter, node->fd[1]);
+        close(node->fd[1]);
+        exit(0);
+    } else { // Parent process
+        close(node->fd[1]); // Close write end
+        waitpid(pid, &exit_status, 0);
+        exit_status = WEXITSTATUS(exit_status);
+        if (exit_status != 0) {
+            close(node->fd[0]);
+            return -1;
+        }
+        dup2(node->fd[0], STDIN_FILENO);
+    }
+    return 0;
+}
+
+void	pipe_dup_create(t_pipe *node)
+{
+    int pipe_status;
+
+    pipe_status = pipe(node->fd);
+    if(pipe_status == -1)
+        perror("pipe");
+}
+
+void	ft_lstadd_back_pipe(t_pipe **lst, t_pipe *new)
+{
+	t_pipe	*ptr;
+    int index;
+
+    index = 1;
+	if (*lst == NULL)
+	{
+		*lst = new;
+        new->index = index;
+		new->prev = NULL;
+	}
+	else
+	{
+		ptr = *lst;
+		while (ptr->next != NULL)
+		{
+            ptr = ptr->next;
+            index++;
+        }
+		ptr->next = new;
+        new->index = index;
+        ptr->fd[0] = new->fd[0];
+        ptr->fd[1] = new->fd[1];
+		new->prev = ptr;
+	}
+	new->next = NULL;
+}
+
+
+void	*pipe_create(t_mshell *shell)
+{
+    t_pipe *new_pipe;
+
+    new_pipe = ft_calloc(1, sizeof(t_pipe));
+    pipe_dup_create(new_pipe);
+    ft_lstadd_back_pipe(&shell->pipe, new_pipe);
+    return(new_pipe);
+}
+
+void parser_heredoc_start(t_mshell *shell, t_lexer *lexer)
+{
+    t_pipe *node;
+    //int heredoc_index;
+    //int std_in;
+
+    //heredoc_index = 0;
+    //std_in = STDIN_FILENO;
+    node = NULL;
+    while(lexer != NULL)
+	{
+		if(lexer->type == TOKEN_HEREDOC && lexer->next != NULL)
+		{
+            lexer = lexer->next;
+            //heredoc_index++;
+            node = pipe_create(shell);
+            heredoc_start(shell, lexer->content, node);
+        }
+		lexer = lexer->next;
+	}
+    // close(stdin);
+    // bunu düşünücem
+}
+*/
+
+int heredoc_start(t_mshell *shell, char *delimiter, int std_in , t_pipe *node) 
+{
+    int exit_status;
+    pid_t pid;
+
+    pid = fork();
+    if (pid == -1) 
+    {
+        perror("fork");
+        return -1;
+    }
+    if (pid == 0) // Child process
+    {
+        close(node->fd[0]); // Close read end
+        write_to_pipe(shell, delimiter, node->fd[1]);
+        close(node->fd[1]);
+        exit(0);
+    } // Parent process 
+    close(node->fd[1]); // Close write end
+    waitpid(pid, &exit_status, 0);
+    exit_status = WEXITSTATUS(exit_status);
+    if (exit_status != 0) 
+    {
+        close(node->fd[0]);
+        return -1;
+    }
+    if(node && node->index > 0)
+    {
+        if(node->next)
+            node->next->fd[0] = node->fd[0];
+    }
+    else
+    {
+        dup2(node->fd[0], std_in);
+        close(node->fd[0]);
+    }
+    return 0;
+}
+
+
+
+void pipe_dup_create(t_pipe *node)
+{
+    if (pipe(node->fd) == -1) {
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+}
+
+
+
+void ft_lstadd_back_pipe(t_pipe **lst, t_pipe *new)
+{
+    t_pipe *ptr;
+    int index = 1; 
+
+    if (*lst == NULL) 
+    {
+        *lst = new;
+        new->index = 1;
+        new->prev = NULL;
+    } 
+    else 
+    {
+        ptr = *lst;
+        while (ptr->next != NULL) 
+        {
+            ptr = ptr->next;
+            index++;
+        }
+        ptr->next = new;
+        new->index = index;
+        new->prev = ptr;
+    }
+    new->next = NULL;
+}
+
+
+void    pipe_create(t_mshell *shell)
+{
+    t_pipe *new_pipe;
+    int index;
+
+    index = 0;
+    while (index < shell->pipe_count)
+    {
+        new_pipe = ft_calloc(1, sizeof(t_pipe));
+        if (!new_pipe) {
+            perror("calloc");
+            exit(EXIT_FAILURE);
+        }
+        pipe_dup_create(new_pipe);
+        ft_lstadd_back_pipe(&shell->pipe, new_pipe);
+        my_malloc(shell->block, new_pipe);
+        index++;
+    }
+}
+
+void parser_heredoc_start(t_mshell *shell, t_lexer *lexer, t_pipe *node)
+{
+    int std_in;
+    int heredoc_count;
+
+    std_in = STDIN_FILENO;
+    heredoc_count = 0;
+    while (lexer != NULL) 
+    {
+        if (lexer->type == TOKEN_HEREDOC && lexer->next != NULL && node)
+        {
+            lexer = lexer->next;
+            heredoc_count++;
+            if (heredoc_start(shell, lexer->content, std_in , node) == -1)
+            {
+                fprintf(stderr, "Heredoc failed for delimiter: %s\n", lexer->content);
+                return; // Hata durumunda işlemi sonlandırabiliriz.
+            }
+            if(heredoc_count > 1 && node->next)
+            {
+                std_in = node->fd[0];
+                node = node->next;
+            }
+        }
+        lexer = lexer->next;
+    }
 }

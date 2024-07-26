@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/23 02:18:51 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/26 01:51:18 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,20 @@ typedef struct s_redirection
 	struct s_redirection	*prev;
 }						t_redirection;
 
+typedef struct s_pipe
+{
+	int 	fd[2];
+	int		index;
+	struct  s_pipe *next;
+	struct  s_pipe *prev;
+	
+}t_pipe;
+
+
 typedef struct s_command // echo test > test.txt | cat wc -l
 {
 	char **args;
 	t_redirection *redirection;
-	int pipe_fd[2];
 	struct s_command *next;
 	struct s_command *prev;
 }						t_command;
@@ -93,6 +102,8 @@ typedef struct s_command // echo test > test.txt | cat wc -l
 typedef struct s_mshell
 {
 	char				*input;
+	int					pipe_count;
+	struct s_pipe		*pipe;
 	struct s_block		*block;
 	struct s_command	*command;
 	struct s_lexer		*lexer;
@@ -143,21 +154,27 @@ char					*ft_strchr_dollar(const char *s);
 
 // execute
 char					*find_path(t_mshell *shell, t_command **command);
-void					execute(t_mshell *shell);
+void					execute(t_mshell *shell, char **env);
 void 					perror_write(char *content, char *perror);
 void					save_restore_fd(int std_in, int std_out, int mode);
+void link_read_end(t_pipe *node);
+void link_write_end(t_pipe *node);
+
 
 // parser
 // t_ast   	*create_parser_node(t_lexer *lexer);
 // void		ft_listadd_back_ast(t_ast **lst, t_ast *new);
 void					parser(t_mshell *shell);
-int						heredoc_start(t_mshell *shell, char *delimeter);
+void					pipe_create(t_mshell *shell);
+void 					parser_heredoc_start(t_mshell *shell, t_lexer *lexer, t_pipe *node);
+int 					heredoc_start(t_mshell *shell, char *delimiter, int std_in , t_pipe *node);
 void					parser_init(t_mshell *shell, t_lexer **lexer);
 void					unquote_the_output(t_mshell *shell, t_lexer *lexer);
+void					ft_lstadd_back_pipe(t_pipe **lst, t_pipe *new);
 
 // builtin
 int						cd(t_mshell *shell);
-int						echo(t_mshell *shell);
+int						echo(t_command *command);
 int						pwd(void);
 int						env(t_env *env, t_command *command);
 int						unset(t_mshell *shell);

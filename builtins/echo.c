@@ -6,7 +6,7 @@
 /*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 12:26:09 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/23 03:15:44 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/24 14:58:42 by onurgokkaya      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,9 @@ void echo_put(t_command *command)
 }
 
 // builtin fonksiyonlara exit_status değerleri ayarlanıcak
-int echo(t_mshell *shell)
+int echo(t_command *command)
 {
-    t_command *command;
-
     *exit_status() = 0;
-    command = shell->command;
     echo_put(command);
     return (TRUE);
 }
