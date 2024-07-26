@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 12:26:09 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/23 12:31:21 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/25 15:57:45 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,24 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static int flag_validator(char *flag)
+static int	flag_validator(char *str)
 {
-    if (!flag)
-        return (0);
-    if (flag[0] != '-')
-        return (0);
-    if (!flag[0])
-        return (0);
-    if (flag[1] != 'n')
-        return (0);
-    return (1);
+	int	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	if (str[i] == '-')
+		i++;
+	if (!str[i])
+		return (0);
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 static int flag_counter(t_command *command)
@@ -34,9 +41,12 @@ static int flag_counter(t_command *command)
     
     i = 0;
     j = 0;
-    while (command && command->args[j++])
+    while (command && command->args[j])
+    {
         if (flag_validator(command->args[j]) == 1)
             i++;
+        j++;
+    }   
     return (i);
 }
 void echo_put(t_command *command)
@@ -57,19 +67,9 @@ void echo_put(t_command *command)
         ft_putstr_fd("\n", 1);
 }
 
-// builtin fonksiyonlara exit_status değerleri ayarlanıcak
-int echo(t_mshell *shell)
+int echo(t_command *command)
 {
-    t_command *command;
-
     *exit_status() = 0;
-    command = shell->command;
     echo_put(command);
     return (TRUE);
 }
-
-/* bash-3.2$ echo $asd_asdasd
-
-bash-3.2$ ./minishell                           a bu duzelcek
-minishell$ echo $asdasd_asdasd
-_asdasd */

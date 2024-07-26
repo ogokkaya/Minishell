@@ -5,7 +5,7 @@ void	builtin_start(t_mshell *shell, t_command *command)
 {
 	if ((ft_strcmp(command->args[0], "echo") == 0)
 		|| (ft_strcmp(command->args[0], "ECHO") == 0))
-		echo(shell);
+		echo(command);
 	else if((ft_strcmp(command->args[0], "env") == 0)
 		|| (ft_strcmp(command->args[0], "ENV") == 0))
 		env(shell->env, command);
@@ -13,7 +13,7 @@ void	builtin_start(t_mshell *shell, t_command *command)
 		|| (ft_strcmp(command->args[0], "PWD") == 0))
 		pwd();
 	else if (ft_strcmp(command->args[0], "cd") == 0)
-		cd(shell);
+		cd(command, shell);
 	 else if(ft_strcmp(command->args[0], "unset") == 0)
 			unset(shell);
 		else if(ft_strcmp(command->args[0], "export") == 0)

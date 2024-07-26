@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:41 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/23 02:49:09 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/07/25 12:22:12 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int	loop_shell(t_mshell *shell)
 		end_malloc_loop(shell_clone);
 		if (shell_start(shell) == FALSE)
 			return (end_malloc(shell), FALSE);
+		//system("leaks minishell");
 	}
 	return(TRUE);
 }

@@ -6,7 +6,7 @@
 /*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/26 17:39:51 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/23 12:30:30 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/07/25 15:52:54 by merboyac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,10 @@
 // PRINT_DEFINES
 # define PROMT "minishell$ "
 // ERROR
-# define MALLOC "Error\nCould not allocate memory\n"
-# define ARG "Error\nThe program can only run without arguments\n"
-#define NSFD "No such file or directory\n"
-#define CNF "command not found\n"
+# define MALLOC " Error\nCould not allocate memory\n"
+# define ARG " Error\nThe program can only run without arguments\n"
+#define NSFD " No such file or directory\n"
+#define CNF " command not found\n"
 
 typedef enum s_token_type
 {
@@ -156,14 +156,17 @@ void					parser_init(t_mshell *shell, t_lexer **lexer);
 void					unquote_the_output(t_mshell *shell, t_lexer *lexer);
 
 // builtin
-int						cd(t_mshell *shell);
-int						echo(t_mshell *shell);
+int						cd(t_command *command, t_mshell *shell);
+int						echo(t_command *command);
 int						pwd(void);
 int						env(t_env *env, t_command *command);
 int						unset(t_mshell *shell);
 int						export(t_mshell *shell);
-void					if_exist(t_env *env, char *content);
 void					if_not_exist(t_mshell *shell, t_env *env, char *name, char *content);
-int						id_validation(char *name, char *content ,int equal);
-int						is_equal(char c);
+int						id_validation(char *command);
+t_env					*tmp_start_env(void);
+
+// builtins/export_utils_extra.c
+char					*fill_name(t_command *command, int i, int j, int equal, t_block *block);
+char					*fill_content(t_command *command, int i, int j, int equal, t_block *block);
 #endif
