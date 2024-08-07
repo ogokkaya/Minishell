@@ -3,81 +3,78 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:58:22 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/26 15:12:23 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:35:13 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// "_" KONTROLÜ DE OLAN BİR SİLME KONTROLÜ YAPILACAK
-
+#include "../libft/libft.h"
 #include "../minishell.h"
 
-static int is_non_alpha(char *str)
+static int	is_non_alpha(char *str)
 {
-    int i;
+	int	i;
 
-    i = 0;
-    while (str[i] != '\0')
-    {
-        if (!ft_isalpha(str[i]))
-        {   
-            printf("unset: `%s': not a valid identifier\n", str);
-            return (*exit_status() = 1 ,1);
-        }
-        i++;
-    }
-    return (0);
+	i = 0;
+	if (!str)
+		return (1);
+	if (ft_isdigit(str[0]))
+	{
+		print_error(str, 6);
+		return (*exit_status() = 1, 1);
+	}
+	while (str[i] != '\0')
+	{
+		if (ft_isalnum(str[i]) == 1 || str[i] == '_')
+			i++;
+		else
+		{
+			print_error(str, 6);
+			return (*exit_status() = 1, 1);
+		}
+	}
+	return (0);
 }
 
-static int validate_command(t_command *command, char *name)
+static void	free_unset_env(t_env *tmp, t_env *prev, t_env **env)
 {
-    if (!command->args || !command->args[1])
-        return (1);
-    if (ft_strcmp(name, "_") == 0)
-        return (*exit_status() = 1, 1);
-    return (0);
+	if (prev)
+		prev->next = tmp->next;
+	else
+		*env = tmp->next;
+	if (tmp->name)
+		free(tmp->name);
+	if (tmp->content)
+		free(tmp->content);
+	if (tmp)
+		free(tmp);
 }
 
-static void free_envo(t_env *tmp, t_env *prev, t_env **env)
+void	unset(t_env **env, t_command *command)
 {
-    if (prev)
-        prev->next = tmp->next;
-    else
-        *env = tmp->next;
-    free(tmp->name);
-    free(tmp->content);
-    free(tmp);
-}
+	t_unset_vars	vars;
 
-int unset(t_env *env, t_command *command)
-{
-    t_env *tmp;
-    t_env *prev;
-    char *name;
-    int found = 0;
-    int i = 1;
-    
-    if (validate_command(command, command->args[0]))
-        return (1);
-    tmp = env;
-    prev = NULL;
-    while (command->args[i])
-    {
-        name = command->args[i++];
-        is_non_alpha(name);
-        while (tmp)
-        {
-            if (ft_strcmp(tmp->name, name) == 0)
-            {
-                free_envo(tmp, prev, &env);
-                found = 1;
-                break;
-            }
-            prev = tmp;
-            tmp = tmp->next;
-        }
-    }
-    return (found ? 0 : 1);
+	vars.i = 0;
+	while (command->args[vars.i])
+	{
+		if (is_non_alpha(command->args[(vars.i)++]))
+			continue ;
+		vars.tmp = *env;
+		vars.prev = NULL;
+		while (vars.tmp)
+		{
+			if (ft_strcmp(vars.tmp->name, command->args[vars.i - 1]) == 0)
+			{
+				vars.next = vars.tmp->next;
+				free_unset_env(vars.tmp, vars.prev, env);
+				vars.found = 1;
+				vars.tmp = vars.next;
+				break ;
+			}
+			vars.prev = vars.tmp;
+			vars.tmp = vars.tmp->next;
+		}
+	}
 }

@@ -3,157 +3,130 @@
 /*                                                        :::      ::::::::   */
 /*   input_controls.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:10:33 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/08 20:21:30 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/08/07 18:01:10 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include "../libft/libft.h"
 
-int quoter(char *line)
+int	quoter(char *line)
 {
-    static char quotes_flag;
-    int quote_status;
+	static char	quotes_flag;
+	int			quote_status;
 
-    quote_status = 0;
-    quotes_flag = '\0';
-    while (*line != '\0')
-    {
-        if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
-        {
-            if (quote_status == 0)
-            {
-                quotes_flag = *line;
-                quote_status = 1;
-            }
-            else if (quotes_flag == *line)
-                quote_status = 0;
-        }
-        line++;
-    }
-    if (quote_status == 1)
-        return (ft_putendl_fd("WRONG QUOTE USAGE (OR HEREDOC)", 2),FALSE);
-    return (TRUE);
+	quote_status = 0;
+	quotes_flag = '\0';
+	while (*line != '\0')
+	{
+		if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
+		{
+			if (quote_status == 0)
+			{
+				quotes_flag = *line;
+				quote_status = 1;
+			}
+			else if (quotes_flag == *line)
+				quote_status = 0;
+		}
+		line++;
+	}
+	if (quote_status == 1)
+		return (*exit_status() = 1, FALSE);
+	return (TRUE);
 }
 
-static int redirection_check(char *line)
+static int	redirection_check(char *line)
 {
-    int redir_count = 0;
-    char last_redir = '\0';
-    int in_quotes = 0;
+	t_variables	vars;
 
-    while (*line)
-    {
-        // Girdilerin tırnak içinde olup olmadığını kontrol eden if bloğu
-        if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
-        {
-            if (in_quotes == 0)
-                in_quotes = 1;
-            else
-                in_quotes = 0;
-        }
-        
-        // Eğer tırnak içinde değilse ve girdi > veya < işaretlerinden biri ise devamında kullanımını kontrol eder
-        if (!in_quotes && (*line == REDIRECT_OUT || *line == REDIRECT_IN))
-        {
-            if ((last_redir == REDIRECT_OUT && *line == REDIRECT_IN)
-                || (last_redir == REDIRECT_IN && *line == REDIRECT_OUT))
-                return (ft_putendl_fd("WRONG REDIRECTION USAGE: Consecutive opposite redirections", 2), FALSE);
-            redir_count++;
-            if (redir_count >= 3)
-                return (ft_putendl_fd("WRONG REDIRECTION USAGE: Too many consecutive redirections", 2), FALSE);
-            last_redir = *line;
-        }
-        else
-        {
-            redir_count = 0;
-            last_redir = '\0';
-        }
-        line++;
-    }
-    return (TRUE);
+	vars = (t_variables){0};
+	while (*line)
+	{
+		if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
+			vars.i = !vars.i;
+		if (!vars.i && (*line == REDIRECT_OUT || *line == REDIRECT_IN))
+		{
+			if (in_out_check(&vars, line))
+				return (FALSE);
+			if (++vars.j >= 3)
+				return (FALSE);
+			vars.c = *line;
+			while (*++line && ft_space(*line))
+				;
+		}
+		else
+			j_0c_null(&vars, &line);
+		vars.k++;
+	}
+	if ((vars.k == 1 || vars.k == 2) && (vars.j == 1 || vars.j == 2))
+		return (*exit_status() = 1, FALSE);
+	return (TRUE);
 }
 
-static int pipe_check(char *line)
+static int	pipe_check(char *line)
 {
-    int pipe_count = 0;
-    int in_command = 0;
-    int in_quotes = 0;
+	t_variables	vars;
 
-    while (*line)
-    {
-        // Girdilerin tırnak içinde olup olmadığını kontrol eden if bloğu
-        if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
-        {
-            if (in_quotes == 0)
-                in_quotes = 1;
-            else
-                in_quotes = 0;
-        }
-        // Eğer tırnak içinde değilse ve girdi | işareti ise devamında kullanımını kontrol eder
-        if (!in_quotes && *line == PIPE)
-        {
-            if (pipe_count > 0 && !in_command)
-                return (ft_putendl_fd("WRONG PIPE USAGE: Missing command between pipes", 2), FALSE);
-            pipe_count++;
-            in_command = 0;
-            line++;
-            while (*line && ft_space(*line))
-                line++;
-            if (*line == PIPE)
-                return (ft_putendl_fd("WRONG PIPE USAGE: Consecutive pipes without command", 2), FALSE);
-            continue;
-        }
-        else if (!ft_space(*line))
-        {
-            in_command = 1;
-            pipe_count = 0;
-        }
-        line++;
-    }
-    if (pipe_count > 0 && !in_command)
-        return (ft_putendl_fd("WRONG PIPE USAGE: Pipe at the end without command", 2), FALSE);
-    return (TRUE);
+	vars = (t_variables){0};
+	while (*line)
+	{
+		if (*line == SINGLE_QUOTE || *line == DOUBLE_QUOTE)
+			vars.k = !vars.k;
+		if (!vars.k && *line == PIPE)
+		{
+			if (vars.i > 0 && !vars.j)
+				return (*exit_status() = 1, FALSE);
+			vars.i++;
+			vars.j = 0;
+			while (*++line && ft_space(*line))
+				;
+			if (*line == PIPE)
+				return (*exit_status() = 1, FALSE);
+			continue ;
+		}
+		else if (!ft_space(*(line++)))
+			j_1i_0(&vars);
+	}
+	if (vars.i > 0 && !vars.j)
+		return (*exit_status() = 1, FALSE);
+	return (TRUE);
 }
 
-static int standardizer(char *line)
+static int	standardizer(char *line)
 {
-    int i;
+	int	i;
 
-    i = ft_strlen(line);
-        if (line[i] == SPACE)
-        {
-            while (line[i] == SPACE)
-                i--;
-            if (line[i] == PIPE)
-                return (ft_putendl_fd("ENDLINE PIPE ERR", 2),FALSE);
-        }
-
-        if (*line == SPACE || *line == PIPE)
-        {
-            while (*line == SPACE)
-                line++;
-            if (*line == PIPE)
-                return (ft_putendl_fd("FIRST CHAR PIPE ERR", 2), FALSE);
-        }
-    return (TRUE);
+	i = ft_strlen(line);
+	if (line[i] == SPACE)
+	{
+		while (line[i] == SPACE)
+			i--;
+		if (line[i] == PIPE)
+			return (*exit_status() = 1, FALSE);
+	}
+	if (*line == SPACE || *line == PIPE)
+	{
+		while (*line == SPACE)
+			line++;
+		if (*line == PIPE)
+			return (*exit_status() = 1, FALSE);
+	}
+	return (TRUE);
 }
 
-int line_verify(char *line)
+int	line_verify(char *line)
 {
-    // tırnak kontrolü
-    if (quoter(line) == FALSE)
-        return (FALSE);
-    // redirection kontrolü 
-    if (redirection_check(line) == FALSE)
-        return (FALSE);
-    // pipe kontrolü
-    if (pipe_check(line) == FALSE)
-        return (FALSE);
-    // 2. pipe kontrolü
-    if (standardizer(line) == FALSE)
-        return (FALSE);
-    return (TRUE);
+	if (quoter(line) == FALSE)
+		return (FALSE);
+	if (redirection_check(line) == FALSE)
+		return (FALSE);
+	if (pipe_check(line) == FALSE)
+		return (FALSE);
+	if (standardizer(line) == FALSE)
+		return (FALSE);
+	return (TRUE);
 }

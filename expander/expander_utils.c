@@ -1,70 +1,120 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expander_utils.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/06 13:07:31 by ogokkaya          #+#    #+#             */
+/*   Updated: 2024/08/07 20:12:51 by ogokkaya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../libft/libft.h"
 #include "../minishell.h"
 #include <stdio.h>
 
-
-char *find_env(t_mshell *shell, char *path)
+char	*ft_strchr_dollar(const char *s)
 {
-    t_env *search_env;
+	int	i;
 
-    search_env = shell->env;
-    while(search_env != NULL)
-    {
-        // bu kısma bak 
-        if((ft_strncmp(search_env->name, path, ft_strlen(search_env->name)) == 0) && (ft_strncmp(search_env->name, path, ft_strlen(path)) == 0))
-            return(ft_strdup(search_env->content));
-        search_env = search_env->next;
-    }
-    return(ft_strdup(""));
-    // bu kısım düşünülmeli
+	i = 0;
+	if (!s || !s[i])
+		return (NULL);
+	while (s[i])
+	{
+		if (s[i] == '$' && s[i + 1] && s[i + 1] == '$')
+			i++;
+		else if (s[i] == '$' && s[i + 1] && !ft_isalnum_mshell(s[i + 1]) && s[i
+				+ 1] != '?')
+			i++;
+		else if (s[i] == '$' && s[i + 1] != '$')
+			break ;
+		i++;
+	}
+	if (s[i] == '$' && s[i + 1] == '$')
+		i++;
+	if (s[i] == '$' && s[i + 1] == '\0')
+		return (NULL);
+	if (s[i] == '$' && s[i + 1] != '$')
+	{
+		return ((char *)&s[i]);
+	}
+	return (NULL);
 }
 
-int *exit_status(void)
+char	*find_env(t_mshell *shell, char *path)
 {
-    static int exit_status = 0;
+	t_env	*search_env;
+	char	*content;
 
-    return(&exit_status);
+	search_env = shell->env;
+	while (search_env != NULL)
+	{
+		if ((ft_strncmp(search_env->name, path,
+					ft_strlen(search_env->name)) == 0)
+			&& (ft_strncmp(search_env->name, path, ft_strlen(path)) == 0))
+		{
+			if (search_env->content)
+				content = ft_strdup(search_env->content);
+			else
+				content = ft_strdup("");
+			if (my_malloc(shell->block, content))
+				return (perror("find_env"), end_malloc(shell), exit(1), NULL);
+			return (content);
+		}
+		search_env = search_env->next;
+	}
+	content = ft_strdup("");
+	if (my_malloc(shell->block, content))
+		return (perror("find_env"), end_malloc(shell), exit(EXIT_FAILURE),
+			NULL);
+	return (content);
 }
 
-int count_char(const char *str, char quote)
+int	*exit_status(void)
 {
-    int quote_count;
+	static int	exit_status = 0;
 
-    quote_count = 0;
-    while(*str)
-    {
-        if(*str == quote)
-        {
-            quote_count++;
-        }
-        str++;
-    }
-    return(quote_count % 2);
+	return (&exit_status);
 }
- // (before[0] == '\"' && after[ft_strlen(after) - 1] == '\"')
-int check_quotes(const char *before, const char *after)
-{
-    int single_quote_before = count_char(before, '\'');
-    int single_quote_after = count_char(after, '\'');
-    int double_quote_before = count_char(before, '\"');
-    int double_quote_after = count_char(after, '\"');
 
-    // Çift tırnakta "$" koşulu için
-    if (!double_quote_after && after[1] == '\"')
-        return (0);
-    // Hem tek tırnak hem de çift tırnak yoksa
-    else if ((!single_quote_after && !single_quote_before) && (!double_quote_after && !double_quote_before))
-        return (1);
-    // Her iki tırnakda olduğunda
-    else if (((single_quote_after && single_quote_before) && (double_quote_after && double_quote_before)) && (before[0] == '\"' && after[ft_strlen(after) - 1] == '\"'))
-        return (1);
-    // sadece tek tırnak olduğunda
-    else if((single_quote_before && single_quote_after) && (!double_quote_before && after[ft_strlen(after) - 1] != '\"'))
-        return(0);
-    // çift tırnaklar düzgün kapandıysa ve tek tırnak yoksa
-    else if ((double_quote_before && double_quote_after) && (!single_quote_after && !single_quote_before))
-        return (1);
-    // Tek tırnaklarda düzensiz kapanma varsa
-    else if ((!single_quote_after && single_quote_before) || (!single_quote_before && single_quote_after))
-        return (1);
-    return (0);
+int	count_char(const char *str, char quote)
+{
+	int	quote_count;
+
+	quote_count = 0;
+	while (*str)
+	{
+		if (*str == quote)
+		{
+			quote_count++;
+		}
+		str++;
+	}
+	return (quote_count % 2);
+}
+
+t_quotes	quote_check(const char *str, size_t start)
+{
+	bool	in_single;
+	bool	in_double;
+	size_t	i;
+
+	in_single = false;
+	in_double = false;
+	i = 0;
+	while (str[i] != '\0' && i < start)
+	{
+		if (str[i] == '\'' && in_double == false)
+			in_single = !in_single;
+		if (str[i] == '\"' && in_single == false)
+			in_double = !in_double;
+		i++;
+	}
+	if (in_double)
+		return (IN_DOUBLE);
+	else if (in_single)
+		return (IN_SINGLE);
+	return (NOT_QUOTED);
 }

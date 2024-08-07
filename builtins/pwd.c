@@ -3,22 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/12 16:54:53 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/26 13:27:40 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/08/07 19:20:52 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../libft/libft.h"
 #include "../minishell.h"
+#include <limits.h>
 #include <unistd.h>
 
-int pwd()
+int	arg_order(char *str)
 {
-    char cwd[1024];
-    
-    if (getcwd(cwd, sizeof(cwd)) != 0)
-        return (printf("%s\n", cwd), *exit_status() = 0, TRUE);
-    else
-        return (perror("cwd err") ,*exit_status() = 1, FALSE);
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isalpha(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+void	pwd(t_command *command)
+{
+	char	cwd[PATH_MAX];
+
+	if (getcwd(cwd, sizeof(cwd)) != 0)
+	{
+		ft_putendl_fd(cwd, command->output);
+		*exit_status() = 0;
+		return ;
+	}
+	else
+	{
+		ft_putstr_fd("ERROR\ncwd", STDERR_FILENO);
+		*exit_status() = 1;
+		return ;
+	}
 }

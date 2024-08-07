@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/06 15:50:49 by ogokkaya          #+#    #+#             */
+/*   Updated: 2024/08/06 15:51:08 by ogokkaya         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!s1 || !s2)
 		return (1);
-	while((s1[i] == s2[i]) && s1[i] && s2[i])
+	while ((s1[i] == s2[i]) && s1[i] && s2[i])
 		i++;
-	return (s1[i]-s2[i]);
+	return (s1[i] - s2[i]);
 }

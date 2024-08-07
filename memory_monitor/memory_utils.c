@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   memory_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/01 19:46:58 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/25 12:59:23 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/08/07 19:32:44 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdlib.h>
 
 void	ft_lstadd_back_memory(t_block **lst, t_block *new)
 {
@@ -43,8 +44,8 @@ void	ft_lstdelone_memory(t_block *lst, void (*del)(void *))
 {
 	if (!lst)
 		return ;
-	if(lst->allocate)
-		del(lst->allocate);
+	del(lst->allocate);
+	lst->allocate = NULL;
 	free(lst);
 }
 

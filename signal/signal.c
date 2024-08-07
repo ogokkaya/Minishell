@@ -3,41 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 14:35:24 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/16 14:42:34 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/08/07 18:08:57 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <signal.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <readline/history.h>
 #include <readline/readline.h>
+#include "../libft/libft.h"
+#include <signal.h>
 
-static void	sigint_handler(int sig)
+void	sigint_handler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		if (g_signal == SIGHEREDOC)
+		if (g_signal_flag == SIGHEREDOC)
 		{
-			exit(SIGEXIT);
-		}
-		else
-		{
-			ft_itoa(*exit_status());
-			printf("\n");
-			rl_on_new_line();
+			ft_putstr_fd("\n", 1);
 			rl_replace_line("", 0);
+			rl_on_new_line();
+			exit(1);
+		}
+		else if (g_signal_flag == SIGEXEC)
+		{
+			ft_putstr_fd("\n", 1);
+			rl_replace_line("", 0);
+			rl_on_new_line();
+		}
+		else if (g_signal_flag == SIGPROMT)
+		{
+			ft_putstr_fd("\n", 1);
+			rl_replace_line("", 0);
+			rl_on_new_line();
 			rl_redisplay();
+			*exit_status() = 1;
 		}
 	}
 }
 
-
 void	signal_init(void)
 {
 	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, sigint_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

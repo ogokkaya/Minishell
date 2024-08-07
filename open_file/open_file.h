@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_handler.c                                    :+:      :+:    :+:   */
+/*   open_file.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/02 13:16:40 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/03 00:40:36 by onurgokkaya      ###   ########.fr       */
+/*   Created: 2024/08/06 16:17:28 by ogokkaya          #+#    #+#             */
+/*   Updated: 2024/08/06 18:01:05 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#ifndef OPEN_FILE_H
+# define OPEN_FILE_H
 
-void	error_exit(char *error_message, t_mshell *shell, int free_flag)
-{
-	ft_putstr_fd(error_message, 2);
-	if (free_flag == TRUE)
-		end_malloc(shell);
-	exit(1);
-}
+# include <fcntl.h>
+
+# ifndef CREATE_MOD
+#  define CREATE_MOD 0777
+# endif
+
+#endif

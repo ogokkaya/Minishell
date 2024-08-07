@@ -3,80 +3,71 @@
 /*                                                        :::      ::::::::   */
 /*   allocate.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: merboyac <muheren2004@gmail.com>           +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 16:49:42 by merboyac          #+#    #+#             */
-/*   Updated: 2024/07/25 12:35:34 by merboyac         ###   ########.fr       */
+/*   Updated: 2024/08/07 17:50:48 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../libft/libft.h"
 #include "../minishell.h"
 #include <stdio.h>
+#include <./readline/history.h>
+#include <./readline/readline.h>
 
-// Mallocs the starter block
 t_block	*malloc_starter(void)
 {
 	t_block	*block;
 
 	block = ft_calloc(1, sizeof(t_block));
 	if (!block)
-		error_exit(MALLOC, NULL, FALSE);
+		return (perror(MALLOC), exit(EXIT_FAILURE), NULL);
 	return (block);
 }
 
-// Mallocs the memory and returns the pointer
-// void türünden int tiplemesine dönücek fonk
-void	*my_malloc(t_block *block, void *address)
+int	my_malloc(t_block *block, void *address)
 {
 	t_block	*new_block;
-	
+
 	if (address != NULL)
 	{
 		if (block == NULL)
-			return (NULL);
+			return (free(address), FALSE);
 		new_block = ft_lstnew_memory(address);
 		if (new_block != NULL)
 		{
 			ft_lstadd_back_memory(&block, new_block);
 			return (TRUE);
 		}
+		return (free(address), FALSE);
 	}
-	return (free(address), printf(MALLOC), NULL);
+	return (FALSE);
 }
 
-// Free's the malloced memory node
-// bu denenicek
-void	free_malloc(t_block *block, void *delete_adress)
+void	free_command_args(t_command *command)
 {
-	t_block	*current_node;
-	t_block	*previous_node;
+	int	i;
 
-	if (block == NULL || delete_adress == NULL)
-		return ;
-	current_node = block;
-	previous_node = NULL;
-	while (current_node != NULL && current_node->allocate != delete_adress)
+	i = 0;
+	while (command != NULL)
 	{
-		previous_node = current_node;
-		current_node = current_node->next;
-	}
-	if (current_node != NULL)
-	{
-		if (previous_node == NULL)
-			block = current_node->next;
-		else
-			previous_node->next = current_node->next;
-		if (current_node->allocate)
-			free(current_node->allocate);
-		free(current_node);
+		while (command->args[i] != (void *)0)
+		{
+			if (command->args[i])
+				free(command->args[i]);
+			i++;
+		}
+		if (command->args)
+			free(command->args);
+		command = command->next;
+		i = 0;
 	}
 }
 
-// Free's all the malloced memory and the block
 void	end_malloc(t_mshell *shell)
 {
-	// rl_clear_history bu kısıma da eklenebilir
-	if (shell->env)
-		free_env(shell);
+	free_env(shell);
 	ft_lstclear_memory(&shell->block, free);
+	rl_clear_history();
 }

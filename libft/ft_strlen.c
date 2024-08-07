@@ -6,7 +6,7 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/07 17:33:54 by ogokkaya          #+#    #+#             */
-/*   Updated: 2023/12/22 00:49:41 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:50:35 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i])
 		i++;

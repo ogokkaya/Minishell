@@ -3,169 +3,138 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: onurgokkaya <onurgokkaya@student.42.fr>    +#+  +:+       +#+        */
+/*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:29:38 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/23 21:55:23 by onurgokkaya      ###   ########.fr       */
+/*   Updated: 2024/08/07 17:43:36 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include "../libft/libft.h"
 #include <stdio.h>
 
+static int	expand_dollar_env(t_mshell *shell, t_lexer *lexer,
+		char *before_dollar, char *after_dollar)
+{
+	char	*var_name;
+	char	*expand;
+	char	*dollar_changed;
+	int		index;
 
-void expander_free(void  *address, void *address_1, void *address_2)
-{
-    if(address)
-        free(address);
-    if(address_1)
-        free(address_1);
-    if(address_2)
-        free(address_2);
-}
-// 26. satır $1USER girdisi için yazıldı $1USER girdisi <USER> olarak çıkmalı $12121USER girdisi <2121USER> olarak çıkmalı
-// fonskiyon 25 satırı geçtiğinden dolayı düzenlenmeli
-static int expand_dollar_env(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
-{
-    char *var_name;
-    char *expand;
-    char *dollar_changed;
-    int index;
-    
-    index = 0;
-    if(after_dollar[0] == '$' && !ft_isalpha(after_dollar[1]) && (after_dollar[1] != '_'))
-    {
-        lexer->content = ft_strjoin(before_dollar, after_dollar + 2);
-        if(!lexer->content)
-            return(perror("dollar_changed"), end_malloc(shell), exit(1) ,FALSE);
-        return(my_malloc(shell->block, lexer->content), TRUE);
-    } 
-    while(after_dollar[index++])
-        if(!ft_isalnum_mshell(after_dollar[index]))
-            break;
-    var_name = ft_substr(after_dollar , 1, --index);
-    expand = find_env(shell, var_name);
-    dollar_changed = ft_strjoin(expand, &after_dollar[++index]);
-    lexer->content = ft_strjoin(before_dollar, dollar_changed);
-    expander_free(var_name, expand, dollar_changed);
-    if(!lexer->content)
-        return(perror("dollar_changed"), FALSE);
-    return(my_malloc(shell->block, lexer->content),TRUE);
+	index = 0;
+	while (after_dollar[index++])
+		if (!ft_isalnum_mshell(after_dollar[index]))
+			break ;
+	var_name = ft_substr(after_dollar, 1, --index);
+	if (my_malloc(shell->block, var_name))
+		return (FALSE);
+	expand = find_env(shell, var_name);
+	dollar_changed = ft_strjoin(expand, &after_dollar[++index]);
+	if (my_malloc(shell->block, dollar_changed))
+		return (FALSE);
+	lexer->content = ft_strjoin(before_dollar, dollar_changed);
+	if (my_malloc(shell->block, lexer->content))
+		return (perror("dollar_changed"), FALSE);
+	return (TRUE);
 }
 
-static int expand_exit_status(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
+static int	expand_exit_status(t_mshell *shell, t_lexer *lexer,
+		char *before_dollar, char *after_dollar)
 {
-    char *status;
-    char *after_dollar_changed;
-    char *changed_input;
+	char	*status;
+	char	*after_dollar_changed;
+	char	*changed_input;
 
-    status = ft_itoa(*exit_status());
-    if(!status)
-        return(perror("exit_status"), FALSE);
-    after_dollar_changed = ft_substr(after_dollar, 2, ft_strlen(after_dollar + 2));
-    changed_input = ft_strjoin(status, after_dollar_changed);
-    free(status);
-    free(after_dollar_changed);
-    if(!changed_input)
-        return(perror("changed_input"), FALSE);
-    lexer->content = ft_strjoin(before_dollar, changed_input);
-    if(!lexer->content)
-        return(perror("lexer->content"), FALSE);
-    my_malloc(shell->block, lexer->content);
-    return(TRUE);
+	status = ft_itoa(*exit_status());
+	if (my_malloc(shell->block, status))
+		return (perror("exit_status"), FALSE);
+	after_dollar_changed = ft_substr(after_dollar, 2, ft_strlen(after_dollar
+				+ 2));
+	if (my_malloc(shell->block, after_dollar_changed))
+		return (perror("after_dollar_changed"), FALSE);
+	changed_input = ft_strjoin(status, after_dollar_changed);
+	if (my_malloc(shell->block, changed_input))
+		return (perror("changed_input"), FALSE);
+	lexer->content = ft_strjoin(before_dollar, changed_input);
+	if (my_malloc(shell->block, lexer->content))
+		return (perror("lexer->content"), FALSE);
+	return (TRUE);
 }
 
-static int dollar_expander(t_mshell *shell,t_lexer *lexer, char *before_dollar, char *after_dollar)
+static int	dollar_expander(t_mshell *shell, t_lexer *lexer,
+		char *before_dollar, char *after_dollar)
 {
-    if(after_dollar[0] == '$' && after_dollar[1] == '?')
-    {
-        if(expand_exit_status(shell ,lexer ,before_dollar , after_dollar) == FALSE)
-                return(FALSE);
-    }
-    else if(after_dollar[0] == '$' && after_dollar[1])
-    {
-        if(expand_dollar_env(shell ,lexer, before_dollar, after_dollar) == FALSE)
-            return(FALSE);
-    }
-    return(TRUE);
+	if (after_dollar[0] == '$' && after_dollar[1] == '?')
+	{
+		if (expand_exit_status(shell, lexer, before_dollar,
+				after_dollar) == FALSE)
+			return (FALSE);
+	}
+	else if (after_dollar[0] == '$' && after_dollar[1])
+	{
+		if (after_dollar[0] == '$' && !ft_isalpha(after_dollar[1])
+			&& (after_dollar[1] != '_'))
+		{
+			lexer->content = ft_strjoin(before_dollar, after_dollar + 2);
+			if (my_malloc(shell->block, lexer->content))
+				return (perror("dollar_changed"), FALSE);
+			return (TRUE);
+		}
+		else if (expand_dollar_env(shell, lexer, before_dollar,
+				after_dollar) == FALSE)
+			return (FALSE);
+	}
+	return (TRUE);
 }
 
-
-void expand_tilde(t_mshell *shell, t_lexer *lexer)
+static int	expand_tilde(t_mshell *shell, t_lexer *lexer)
 {
-    char *home;
-    char *complete_home;
+	char	*home;
+	char	*complete_home;
 
-    home = find_env(shell, "HOME");
-    if(!home)
-        return(perror("home"), end_malloc(shell), exit(1));
-    if(lexer->content[0] == '~' && lexer->content[1] == '/')
-    {
-        complete_home = ft_strdup(lexer->content);
-        if(!complete_home)
-            return(perror("complete_home"), free(home), end_malloc(shell), exit(1));
-        lexer->content = ft_strjoin(home, complete_home + 1);
-        free(home);
-        if(!lexer->content)
-            return(perror("~"),free(complete_home), end_malloc(shell), exit(1));
-        my_malloc(shell->block, lexer->content);
-    }
-    else if(lexer->content[0] == '~' && lexer->content[1] == '\0')
-    {
-        lexer->content = home;
-        my_malloc(shell->block, lexer->content);
-    }
-    else
-        free(home);
+	home = find_env(shell, "HOME");
+	if (lexer->content[0] == '~' && lexer->content[1] == '/')
+	{
+		complete_home = ft_strdup(lexer->content);
+		if (my_malloc(shell->block, complete_home))
+			return (perror("complete_home"), FALSE);
+		lexer->content = ft_strjoin(home, complete_home + 1);
+		if (my_malloc(shell->block, lexer->content))
+			return (perror("~"), FALSE);
+	}
+	else if (lexer->content[0] == '~' && lexer->content[1] == '\0')
+	{
+		lexer->content = home;
+	}
+	return (TRUE);
 }
 
-char	*ft_strchr_dollar(const char *s)
+void	expander(t_mshell *shell, t_lexer *lexer)
 {
-	int	i;
+	char		*before_dollar;
+	char		*after_dollar;
+	t_quotes	quote_status;
 
-	i = 0;
-	while (s[i])
-    {
-        if(s[i] == '$' && s[i + 1] &&s[i + 1] == '$')
-            i++;
-        else if(s[i] == '$' && s[i + 1] && !ft_isalnum_mshell(s[i + 1]) && s[i + 1] != '?')
-            i++;
-        else if(s[i] == '$' && s[i + 1] != '$')
-            break;
-        i++;
-    }
-    if(s[i] == '$' && s[i + 1] == '$')
-        i++;
-    if(s[i] == '$' && s[i + 1] == '\0')
-        return(NULL);
-	if (s[i] == '$' && s[i + 1] != '$')
-    {
-		return ((char *)&s[i]);
-    }
-	return (NULL);
-}
-
-void expander(t_mshell *shell, t_lexer *lexer)
-{
-    char *before_dollar;
-    char *after_dollar;
-
-    if(lexer->content[0] == '~')
-        expand_tilde(shell, lexer);
-    after_dollar = ft_strchr_dollar(lexer->content);
-    while(after_dollar)
-    {
-        before_dollar = ft_substr(lexer->content, 0, after_dollar - lexer->content);
-        if(!before_dollar)
-            return(perror("before_dollar"), end_malloc(shell), exit(1));
-        else if(check_quotes(before_dollar, after_dollar))
-        {
-            if(dollar_expander(shell ,lexer, before_dollar, after_dollar) == FALSE)
-                return(free(before_dollar),end_malloc(shell), exit(1));
-            after_dollar = ft_strchr_dollar(lexer->content);
-        }
-        else
-            after_dollar = ft_strchr_dollar(after_dollar + 1);
-        free(before_dollar);
-    }
+	if (lexer->content[0] == '~')
+		expand_tilde(shell, lexer);
+	after_dollar = ft_strchr_dollar(lexer->content);
+	while (after_dollar)
+	{
+		quote_status = quote_check(lexer->content, after_dollar
+				- lexer->content);
+		before_dollar = ft_substr(lexer->content, 0, after_dollar
+				- lexer->content);
+		if (my_malloc(shell->block, before_dollar))
+			return (perror("exp_b_dol"), end_malloc(shell), exit(EXIT_FAILURE));
+		if (quote_status != IN_SINGLE)
+		{
+			if (dollar_expander(shell, lexer, before_dollar,
+					after_dollar) == FALSE)
+				return (end_malloc(shell), exit(EXIT_FAILURE));
+			after_dollar = ft_strchr_dollar(lexer->content);
+		}
+		else
+			after_dollar = ft_strchr_dollar(after_dollar + 1);
+	}
 }

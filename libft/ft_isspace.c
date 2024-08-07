@@ -6,13 +6,13 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/03 15:17:15 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/07/03 15:18:26 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/08/06 15:51:24 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 int	ft_isspace(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] == 32)
