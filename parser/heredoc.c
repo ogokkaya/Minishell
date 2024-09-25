@@ -6,7 +6,7 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 13:07:34 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/08/07 17:56:10 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/09/25 06:57:30 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,11 @@ static void	wait_process(t_command *command, int exit_value, int pid, int *fd)
 	*exit_status() = WEXITSTATUS(exit_value);
 	if (*exit_status() != 0)
 	{
-		command->control = FALSE;
+		while (command != NULL)
+		{
+			command->control = FALSE;
+			command = command->next;
+		}
 		close(fd[0]);
 	}
 	else

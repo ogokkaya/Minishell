@@ -6,7 +6,7 @@
 /*   By: ogokkaya <ogokkaya@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 17:09:15 by ogokkaya          #+#    #+#             */
-/*   Updated: 2024/08/07 17:41:47 by ogokkaya         ###   ########.fr       */
+/*   Updated: 2024/09/25 06:58:06 by ogokkaya         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,14 +64,12 @@ void	execve_start(t_mshell *shell, t_command *command)
 static void	single_executive(t_mshell *shell, t_command *command,
 		t_lexer *lexer)
 {
-	while (lexer && lexer->type != TOKEN_PIPE)
+	while (lexer)
 	{
 		if (command->control != FALSE)
 			file_creation(shell, command, &lexer);
 		lexer = lexer->next;
 	}
-	if (lexer && lexer->next && lexer->type == TOKEN_PIPE)
-		shell->lexer = lexer->next;
 	if ((builtin_control(command, command->args[0]) == TRUE)
 		&& (command->control != FALSE))
 		builtin_start(shell, command, 0);
